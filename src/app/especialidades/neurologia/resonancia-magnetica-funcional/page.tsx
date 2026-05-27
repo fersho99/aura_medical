@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Resonancia Magnética Funcional | Neurología — Aura Medical',
+  description: 'Neuroimagen funcional de alta resolución con resonancia magnética 3T para diagnóstico neurológico preciso.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Resonancia Magnética Funcional en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

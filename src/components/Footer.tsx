@@ -136,9 +136,9 @@
             © 2026 Aura Medical Private Clinic. Todos los derechos reservados.
           </p>
           <div className="flex flex-wrap items-center gap-md">
-            <a className="footer-link-sm" href="#">Aviso Legal</a>
-            <a className="footer-link-sm" href="#">Política de Privacidad</a>
-            <a className="footer-link-sm" href="#">Política de Cookies</a>
+            <a className="footer-link-sm" href="/aviso-legal">Aviso Legal</a>
+            <a className="footer-link-sm" href="/privacidad">Política de Privacidad</a>
+            <a className="footer-link-sm" href="/cookies">Política de Cookies</a>
             <div className="flex items-center gap-xs text-surface-variant/30 ml-md">
               <span className="material-symbols-outlined text-[20px]">verified</span>
               <span className="type-label">ISO 9001 | JCI Accredited</span>

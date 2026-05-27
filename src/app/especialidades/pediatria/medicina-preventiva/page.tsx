@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Medicina Preventiva Pediátrica | Pediatría — Aura Medical',
+  description: 'Programa de medicina preventiva infantil con control del niño sano y esquema de vacunación integral.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Medicina Preventiva Infantil en Aura Medical y me gustaría información para agendar una consulta para mi hijo.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Control del Niño Sano | Pediatría — Aura Medical',
+  description: 'Seguimiento pediátrico integral: evaluación del desarrollo, nutrición infantil y vacunación conforme a la cartilla.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Control de Niño Sano en Aura Medical y me gustaría información para agendar una consulta pediátrica.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

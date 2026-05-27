@@ -1,4 +1,9 @@
-﻿export default function QuirofanoPage() {
+export const metadata = {
+  title: 'Bloque Quirúrgico | Aura Medical',
+  description: 'Quirófanos integrados con asistencia robótica Da Vinci, neuroimagen intraoperatoria y suites de recuperación premium.',
+}
+
+export default function QuirofanoPage() {
   return (
     <main>
 

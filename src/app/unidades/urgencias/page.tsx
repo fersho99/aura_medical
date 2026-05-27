@@ -1,4 +1,9 @@
-﻿export default function UrgenciasPage() {
+export const metadata = {
+  title: 'Urgencias 24/7 | Aura Medical',
+  description: 'Atención de urgencias médicas las 24 horas, 7 días a la semana, con especialistas en sala de choque y acceso directo a UCI.',
+}
+
+export default function UrgenciasPage() {
   return (
     <main>
 

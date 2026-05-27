@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Cirugía Pediátrica de Mínima Invasión | Pediatría — Aura Medical',
+  description: 'Cirugía pediátrica laparoscópica y toracoscópica con técnicas de mínima invasión y recuperación acelerada.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Cirugía Pediátrica de Mínima Invasión en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

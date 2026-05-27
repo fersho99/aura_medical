@@ -1,4 +1,9 @@
-﻿import AgendarCitaModal from '@/components/AgendarCitaModal'
+export const metadata = {
+  title: 'Neurología de Precisión | Aura Medical',
+  description: 'Centro de Neurociencias con neuroimagen avanzada, neurocirugía de mínima invasión y unidad de tratamiento del ACV.',
+}
+
+import AgendarCitaModal from '@/components/AgendarCitaModal'
 
 export default function NeurologiaPage() {
   return (

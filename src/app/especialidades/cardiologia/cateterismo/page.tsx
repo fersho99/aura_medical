@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Cateterismo Cardíaco | Cardiología — Aura Medical',
+  description: 'Diagnóstico y tratamiento mediante cateterismo cardíaco con hemodinámica 3D de última generación.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Cateterismo Cardíaco en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -116,7 +121,7 @@ export default function CatetersmoCardiacoPage() {
               <img
                 alt="Equipo médico en sala de cateterismo"
                 className="absolute inset-0 w-full h-full object-cover"
-                src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?q=80&w=2000&auto=format&fit=crop"
+                src="/imagenes/cateterismo.png"
               />
               <div className="absolute inset-0 bg-linear-to-t from-on-background/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-md left-md right-md">
@@ -171,7 +176,7 @@ export default function CatetersmoCardiacoPage() {
               <img
                 alt="Sala de hemodinamia de última generación"
                 className="absolute inset-0 w-full h-full object-cover"
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2000&auto=format&fit=crop"
+                src="/imagenes/cateterismo2.png"
               />
               <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-md left-md right-md flex items-center gap-sm">

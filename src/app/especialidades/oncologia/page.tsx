@@ -1,4 +1,9 @@
-﻿import AgendarCitaModal from '@/components/AgendarCitaModal'
+export const metadata = {
+  title: 'Oncología Integral | Aura Medical',
+  description: 'Instituto Oncológico con oncología médica, radioterapia de precisión, inmunoterapia y cirugía robótica para el tratamiento del cáncer.',
+}
+
+import AgendarCitaModal from '@/components/AgendarCitaModal'
 
 export default function OncologiaPage() {
   return (

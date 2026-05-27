@@ -1,4 +1,9 @@
-﻿import AgendarCitaModal from '@/components/AgendarCitaModal'
+export const metadata = {
+  title: 'Pediatría y Neonatología | Aura Medical',
+  description: 'Centro pediátrico integral con neonatología, medicina preventiva infantil y cirugía pediátrica de mínima invasión.',
+}
+
+import AgendarCitaModal from '@/components/AgendarCitaModal'
 
 export default function PediatriaPage() {
   return (

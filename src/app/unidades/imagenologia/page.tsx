@@ -1,4 +1,9 @@
-﻿export default function ImagenologiaPage() {
+export const metadata = {
+  title: 'Centro de Imagenología | Aura Medical',
+  description: 'Diagnóstico por imagen de precisión: resonancia magnética 3T, tomografía multidetector y ultrasonido de alta resolución.',
+}
+
+export default function ImagenologiaPage() {
   return (
     <main>
 

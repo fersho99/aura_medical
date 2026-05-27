@@ -1,4 +1,9 @@
-﻿import AgendarCitaModal from '@/components/AgendarCitaModal'
+export const metadata = {
+  title: 'Cardiología Avanzada | Aura Medical',
+  description: 'Instituto del Corazón con tecnología hemodinámica 3D, electrofisiología avanzada y cirugía robótica cardiovascular.',
+}
+
+import AgendarCitaModal from '@/components/AgendarCitaModal'
 
 export default function CardiologiaPage() {
   return (

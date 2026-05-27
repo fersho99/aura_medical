@@ -1,4 +1,9 @@
-﻿export default function UnidadesMedicasPage() {
+export const metadata = {
+  title: 'Unidades Médicas | Aura Medical',
+  description: 'Instalaciones de clase mundial: Baby Port, Imagenología, UCI, Bloque Quirúrgico, Urgencias 24/7 y Medicina Preventiva en Chihuahua.',
+}
+
+export default function UnidadesMedicasPage() {
   return (
     <main>
 
