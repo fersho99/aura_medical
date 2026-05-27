@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Tratamiento del ACV | Neurología — Aura Medical',
+  description: 'Unidad de ataque cerebrovascular con tiempo puerta-aguja menor a 30 minutos, trombolisis y trombectomía mecánica.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Tratamiento de ACV en Aura Medical y me gustaría información sobre la Unidad de Ictus y cómo actuar ante una emergencia.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

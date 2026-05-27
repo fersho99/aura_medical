@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Neonatología | Pediatría — Aura Medical',
+  description: 'UCIN neonatal de alta complejidad con incubadoras híbridas y monitoreo continuo para recién nacidos prematuros.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Neonatología Alta Complejidad en Aura Medical y me gustaría información sobre sus servicios de cuidados intensivos neonatales.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

@@ -1,4 +1,10 @@
-﻿/** Página: Home — Inicio de Aura Medical */
+/** Página: Home — Inicio de Aura Medical */
+
+
+export const metadata = {
+  title: 'Aura Medical | Clínica Privada de Alta Especialidad',
+  description: 'Atención médica de excelencia en Chihuahua. Especialidades en cardiología, neurología, oncología y pediatría con tecnología de vanguardia y trato humano.',
+}
 
 import HomeQuickActions from '@/components/HomeQuickActions'
 import NewsletterForm from '@/components/NewsletterForm'
@@ -161,38 +167,44 @@ export default function Inicio() {
             </div>
           </div>
 
-          <div className="md:col-span-4 rounded-2xl bg-inverse-surface border border-outline/20 p-lg flex flex-col justify-between relative overflow-hidden shadow-sm shadow-secondary/5">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10" />
-            <div>
-              <div className="w-12 h-12 rounded-full bg-on-background flex items-center justify-center text-primary-fixed mb-sm border border-outline/30">
-                <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>monitor_heart</span>
+          <div className="md:col-span-4 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
+            <img alt="UCI — Monitoreo de pacientes" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src="/imagenes/card-uci.jpg" />
+            <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-lg w-full">
+              <div className="flex items-center gap-xs text-primary-fixed mb-xs">
+                <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>monitor_heart</span>
+                <span className="type-label uppercase tracking-wider">UCI</span>
               </div>
               <h3 className="type-headline text-on-primary mb-xs">Monitoreo Continuo</h3>
               <p className="type-body text-surface-variant">Sistemas integrados de datos vitales en tiempo real para pacientes hospitalizados.</p>
             </div>
-            <div className="mt-md pt-md border-t border-outline/20 flex items-end gap-xs h-16 opacity-70">
-              {[30, 50, 40, 80, 60, 90].map((h, i) => (
-                <div key={i} className="w-1/6 bg-primary-fixed rounded-t-full" style={{ height: `${h}%` }} />
-              ))}
-            </div>
           </div>
 
-          <div className="md:col-span-5 rounded-2xl bg-surface-container border border-surface-variant p-lg flex flex-col justify-center shadow-sm shadow-secondary/5">
-            <div className="flex items-center gap-sm mb-md">
-              <span className="material-symbols-outlined text-[32px] text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-              <h3 className="type-headline text-on-surface">Junta Médica</h3>
+          <div className="md:col-span-5 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
+            <img alt="Cirugía robótica Da Vinci" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src="/imagenes/surgical-robotics.png" />
+            <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-lg w-full">
+              <div className="flex items-center gap-xs text-primary-fixed mb-xs">
+                <span className="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+                <span className="type-label uppercase tracking-wider">Cirugía</span>
+              </div>
+              <h3 className="type-headline text-on-primary mb-xs">Cirugía Robótica Da Vinci</h3>
+              <p className="type-body text-surface-variant">Intervenciones de alta precisión con mínima invasión, menos dolor y recuperación acelerada.</p>
             </div>
-            <p className="type-body text-on-surface-variant mb-md">Más de 200 especialistas certificados colaborando en entornos clínicos avanzados para resolver los casos más complejos.</p>
-            <a className="card-link" href="/directorio">Conocer equipo <span className="material-symbols-outlined text-[16px]">arrow_forward</span></a>
           </div>
 
           <div className="md:col-span-7 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
-            <img alt="Equipo médico de Aura Medical" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            <img alt="Equipo de especialistas de Aura Medical" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               src="/imagenes/premium-service.jpg" />
             <div className="absolute inset-0 bg-linear-to-t from-on-background/80 to-transparent" />
             <div className="absolute bottom-0 left-0 p-lg">
-              <h3 className="type-headline text-on-primary mb-xs">Recuperación Premium</h3>
-              <p className="type-body text-surface-variant">Suites privadas diseñadas bajo los más altos estándares de confort y privacidad.</p>
+              <h3 className="type-headline text-on-primary mb-xs">Equipo de Especialistas</h3>
+              <p className="type-body text-surface-variant">Más de 200 médicos certificados colaborando para ofrecer los mejores resultados clínicos.</p>
+              <a className="mt-sm inline-flex items-center gap-xs text-primary-fixed hover:underline type-label" href="/directorio">
+                Conocer equipo <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </a>
             </div>
           </div>
 
@@ -262,7 +274,7 @@ export default function Inicio() {
           </div>
           <div className="md:w-1/2 relative min-h-100">
             <img alt="Premium Service" className="absolute inset-0 w-full h-full object-cover"
-              src="/imagenes/premium-service.png" />
+              src="/imagenes/premium-suite.jpg" />
             <div className="absolute inset-0 bg-linear-to-r from-inverse-surface to-transparent" />
           </div>
         </div>

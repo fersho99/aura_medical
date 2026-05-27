@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Cirugía Robótica Oncológica | Oncología — Aura Medical',
+  description: 'Cirugía robótica oncológica con sistema Da Vinci para procedimientos de alta precisión y mínima invasión.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Cirugía Oncológica Robótica en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

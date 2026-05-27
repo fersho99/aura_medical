@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Clínica de la Memoria | Neurología — Aura Medical',
+  description: 'Evaluación y tratamiento integral del deterioro cognitivo, Alzheimer y otras demencias con neurología de precisión.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de la Clínica de Memoria en Aura Medical y me gustaría información para agendar una valoración neurocognitiva.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

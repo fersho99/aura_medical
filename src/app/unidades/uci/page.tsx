@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Unidad de Cuidados Intensivos | Aura Medical',
+  description: 'UCI adultos con monitoreo avanzado 24/7, ventilación mecánica inteligente y soporte vital de última generación.',
+}
+
 export default function UCIPage() {
   return (
     <main>

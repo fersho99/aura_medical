@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Neurocirugía de Mínima Invasión | Neurología — Aura Medical',
+  description: 'Técnicas neuroquirúrgicas de precisión con navegación intraoperatoria y neuromonitoreo continuo.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Neurocirugía de Mínima Invasión en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

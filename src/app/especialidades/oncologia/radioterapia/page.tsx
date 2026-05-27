@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Radioterapia de Precisión | Oncología — Aura Medical',
+  description: 'Radioterapia con acelerador lineal, IMRT y radiocirugía estereotáctica para el tratamiento preciso del cáncer.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Radioterapia de Precisión en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Inmunoterapia | Oncología — Aura Medical',
+  description: 'Inmunoterapia de vanguardia con terapias dirigidas y anticuerpos monoclonales para el tratamiento del cáncer.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Inmunoterapia y Terapias Dirigidas en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

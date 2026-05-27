@@ -1,5 +1,11 @@
 /** Página: Noticias — Blog y actualidades de Aura Medical */
 
+
+export const metadata = {
+  title: 'Noticias y Actualidades | Aura Medical',
+  description: 'Últimas noticias, avances médicos y eventos de Aura Medical Private Clinic. Mantente informado sobre salud y bienestar.',
+}
+
 import NewsletterForm from '@/components/NewsletterForm'
 
 const noticias = [

@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Ecocardiografía | Cardiología — Aura Medical',
+  description: 'Diagnóstico cardíaco de precisión con ecocardiografía 3D, Doppler y estrés en tiempo real.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Ecocardiografía Avanzada en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -101,7 +106,7 @@ export default function EcocardiografiaPage() {
             </div>
             <div className="relative rounded-3xl overflow-hidden shadow-2xl h-150 order-first lg:order-last">
               <img alt="Monitor con imagen ecocardiográfica 3D" className="absolute inset-0 w-full h-full object-cover"
-                src="/imagenes/advanced-mri.png" />
+                src="/imagenes/ecocardiografía.gif" />
               <div className="absolute inset-0 bg-linear-to-t from-on-background/60 via-transparent to-transparent"></div>
               <div className="absolute bottom-md left-md right-md">
                 <div className="inline-flex items-center gap-xs bg-surface/20 backdrop-blur-md rounded-full px-sm py-xs text-on-primary type-label">
@@ -151,7 +156,7 @@ export default function EcocardiografiaPage() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl h-150">
               <img alt="Equipo de ecocardiografía de última generación"
                 className="absolute inset-0 w-full h-full object-cover"
-                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop" />
+                src="/imagenes/ecocardiografía2.png" />
               <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-md left-md right-md flex items-center gap-sm">
                 <span className="flex h-3 w-3 relative">

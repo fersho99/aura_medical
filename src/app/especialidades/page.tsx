@@ -1,4 +1,9 @@
-﻿export default function EspecialidadesPage() {
+export const metadata = {
+  title: 'Especialidades Médicas | Aura Medical',
+  description: 'Descubra nuestras especialidades médicas: Cardiología, Neurología, Oncología y Pediatría con tecnología avanzada y los mejores especialistas de Chihuahua.',
+}
+
+export default function EspecialidadesPage() {
   return (
     <main>
 
@@ -82,7 +87,7 @@
               <img
                 alt="Cardiology Lab"
                 className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop"
+                src="/imagenes/cardiologia.png"
               />
               <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>

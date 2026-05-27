@@ -1,4 +1,10 @@
-﻿/** Página: Baby Port — Unidad de Maternidad Premium de Aura Medical */
+/** Página: Baby Port — Unidad de Maternidad Premium de Aura Medical */
+
+
+export const metadata = {
+  title: 'Baby Port — Maternidad Premium | Aura Medical',
+  description: 'Unidad de maternidad de lujo con suites privadas, UCIN neonatal y planes de parto natural, cesárea y VIP Concierge.',
+}
 
 export default function BabyPortPage() {
   return (

@@ -1,4 +1,9 @@
-﻿const whatsappNumber = "526531332053";
+export const metadata = {
+  title: 'Cirugía Cardiovascular | Cardiología — Aura Medical',
+  description: 'Cirugía cardiovascular de alta complejidad con técnicas robóticas y mínimamente invasivas.',
+}
+
+const whatsappNumber = "526531332053";
 const whatsappMessage = encodeURIComponent("Hola, visité la página de Cirugía Cardiovascular en Aura Medical y me gustaría información para agendar una valoración.");
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

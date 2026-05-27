@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Medicina Preventiva | Aura Medical',
+  description: 'Programa de salud preventiva con chequeos ejecutivos, check-up integral y medicina preventiva personalizada.',
+}
+
 export default function MedicinaPreventivaPage() {
   return (
     <main>
