@@ -1,65 +1,282 @@
-import Image from "next/image";
+﻿/** Página: Home — Inicio de Aura Medical */
 
-export default function Home() {
+import HomeQuickActions from '@/components/HomeQuickActions'
+import NewsletterForm from '@/components/NewsletterForm'
+
+export default function Inicio() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main>
+
+      {/* ── Hero ─────────────────────────────────────────── */}
+      <section className="relative w-full h-204.75 min-h-150 flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/imagenes/hero-background.png"
+            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+          >
+            <source src="/videos/hero-home.mp4" type="video/mp4" />
+            <img
+              alt="Hero Background"
+              src="/imagenes/hero-background.png"
+              className="w-full h-full object-cover"
+            />
+          </video>
+          <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/40 to-transparent mix-blend-multiply" />
+        </div>
+        <div className="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto flex flex-col items-center gap-md">
+          <div className="inline-flex items-center gap-xs bg-surface-bright/10 backdrop-blur-md border border-surface-bright/20 rounded-full px-sm py-xs text-on-primary type-label mb-sm">
+            <span className="w-2 h-2 rounded-full bg-primary-fixed animate-pulse" />
+            Innovación en Salud
+          </div>
+          <h1 className="type-display text-on-primary drop-shadow-lg">
+            Excelencia Médica de Nueva Generación
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="type-body-lg text-surface-variant max-w-2xl mx-auto mt-sm drop-shadow-md">
+            Precisión clínica y tecnología de vanguardia al servicio de su bienestar. Descubra un entorno médico diseñado para la máxima eficiencia y cuidado personalizado.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ── Acciones rápidas ─────────────────────────────── */}
+      <HomeQuickActions />
+
+      {/* ── Por qué Aura Medical ─────────────────────────── */}
+      <section className="section container-page mt-lg">
+        <div className="section-header">
+          <h2 className="type-display text-on-surface mb-sm">Por qué elegir Aura Medical</h2>
+          <p className="type-body-lg text-on-surface-variant max-w-3xl mx-auto">Un nuevo estándar en atención médica privada, combinando el factor humano con la más alta innovación.</p>
         </div>
-      </main>
-    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          {[
+            { icon: 'health_and_safety', color: 'text-primary', bg: 'bg-primary-container/20', title: 'Atención 24/7', desc: 'Urgencias y cuidados intensivos disponibles a cualquier hora, todos los días del año con personal altamente capacitado.' },
+            { icon: 'public', color: 'text-secondary', bg: 'bg-secondary-container/20', title: 'Expertos Globales', desc: 'Una red de especialistas con formación internacional y líderes de opinión en sus respectivas áreas terapéuticas.' },
+            { icon: 'memory', color: 'text-tertiary', bg: 'bg-tertiary-container/20', title: 'Tecnología de Punta', desc: 'Inversión constante en los últimos avances médicos, robótica y sistemas de IA para diagnósticos precisos.' },
+          ].map(({ icon, color, bg, title, desc }) => (
+            <div key={title} className="flex flex-col items-center text-center p-md">
+              <div className={`w-20 h-20 rounded-full ${bg} flex items-center justify-center ${color} mb-md`}>
+                <span className="material-symbols-outlined text-[40px]" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+              </div>
+              <h3 className="type-headline text-on-surface mb-sm">{title}</h3>
+              <p className="type-body text-on-surface-variant">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Unidades médicas ─────────────────────────────── */}
+      <section className="section bg-surface-container-low">
+        <div className="container-page">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-xl gap-md">
+            <div className="max-w-2xl">
+              <h2 className="type-display text-on-surface mb-sm">Unidades Médicas Especializadas</h2>
+              <p className="type-body-lg text-on-surface-variant">Centros de excelencia dedicados al tratamiento integral de diversas patologías, con equipos multidisciplinarios.</p>
+            </div>
+            <a className="btn-outline whitespace-nowrap" href="/unidades">Ver todas las unidades</a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+            {[
+              { icon: 'cardiology',  color: 'primary',   title: 'Cardiología', desc: 'Prevención, diagnóstico y tratamiento de enfermedades cardiovasculares con hemodinamia avanzada.',    href: '/especialidades/cardiologia' },
+              { icon: 'neurology',   color: 'secondary', title: 'Neurología',  desc: 'Atención integral de trastornos del sistema nervioso, neurocirugía de mínima invasión e ictus.',        href: '/especialidades/neurologia' },
+              { icon: 'oncology',    color: 'tertiary',  title: 'Oncología',   desc: 'Tratamientos personalizados contra el cáncer, radioterapia de precisión y apoyo psicológico.',          href: '/especialidades/oncologia' },
+              { icon: 'pediatrics',  color: 'primary',   title: 'Pediatría',   desc: 'Cuidado especializado para niños y adolescentes en un entorno amigable y seguro.',                       href: '/especialidades/pediatria' },
+            ].map(({ icon, color, title, desc, href }) => (
+              <div key={title} className="card group">
+                <div className={`card-icon bg-${color}/10 text-${color} group-hover:bg-${color} group-hover:text-on-${color}`}>
+                  <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+                </div>
+                <h3 className="type-headline text-on-surface mb-sm">{title}</h3>
+                <p className="type-body text-on-surface-variant mb-md h-24 overflow-hidden">{desc}</p>
+                <a className={`card-link text-${color} hover:text-${color}-container`} href={href}>
+                  Explorar unidad <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Vanguardia tecnológica ────────────────────────── */}
+      <section className="section container-page">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
+          <div className="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-2xl h-150">
+            <img alt="Surgical Robotics" className="absolute inset-0 w-full h-full object-cover"
+              src="/imagenes/surgical-robotics.png" />
+            <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-lg w-full">
+              <div className="inline-flex items-center gap-xs bg-surface/20 backdrop-blur-md rounded-full px-sm py-xs text-on-primary type-label mb-md">
+                <span className="material-symbols-outlined text-[18px]">precision_manufacturing</span>
+                Robótica Quirúrgica
+              </div>
+              <h3 className="type-display text-on-primary mb-sm">Precisión Milimétrica</h3>
+              <p className="type-body text-surface-variant">Intervenciones mínimamente invasivas con sistemas robóticos de última generación para una recuperación más rápida.</p>
+            </div>
+          </div>
+          <div className="order-1 lg:order-2 flex flex-col gap-md">
+            <h2 className="type-display text-on-surface">Vanguardia Tecnológica</h2>
+            <p className="type-body-lg text-on-surface-variant mb-md">La integración de la inteligencia artificial y la robótica redefine lo que es posible en la medicina moderna.</p>
+            <div className="flex flex-col gap-lg">
+              {[
+                { icon: 'psychology', color: 'text-primary', bg: 'bg-primary/10', title: 'Diagnóstico por IA', desc: 'Algoritmos predictivos que asisten a nuestros médicos en la detección temprana de anomalías con una precisión sin precedentes.' },
+                { icon: 'science',    color: 'text-secondary', bg: 'bg-secondary/10', title: 'Medicina Genómica', desc: 'Terapias diseñadas específicamente según el perfil genético del paciente para maximizar la eficacia del tratamiento.' },
+              ].map(({ icon, color, bg, title, desc }) => (
+                <div key={title} className="flex gap-md">
+                  <div className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center ${color} shrink-0`}>
+                    <span className="material-symbols-outlined text-[24px]">{icon}</span>
+                  </div>
+                  <div>
+                    <h4 className="type-headline text-on-surface mb-xs">{title}</h4>
+                    <p className="type-body text-on-surface-variant">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a className="btn-dark mt-md w-fit" href="/unidades">Descubrir Tecnología</a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Bento Grid ───────────────────────────────────── */}
+      <section className="section container-page bg-surface-container-lowest rounded-3xl mb-xl">
+        <div className="section-header">
+          <h2 className="type-headline text-on-surface mb-sm">Infraestructura Tecnológica</h2>
+          <p className="type-body text-on-surface-variant max-w-2xl mx-auto">Nuestro compromiso con la salud se refleja en la integración de sistemas de diagnóstico avanzados e instalaciones de primer nivel.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-md auto-rows-[300px]">
+
+          <div className="md:col-span-8 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
+            <img alt="Advanced MRI" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src="/imagenes/advanced-mri.png" />
+            <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-lg w-full">
+              <div className="flex items-center gap-xs text-primary-fixed mb-xs">
+                <span className="material-symbols-outlined text-[20px]">biotech</span>
+                <span className="type-label uppercase tracking-wider">Diagnóstico</span>
+              </div>
+              <h3 className="type-headline text-on-primary mb-xs">Imagenología de Alta Precisión</h3>
+              <p className="type-body text-surface-variant">Equipos de última generación que garantizan resultados exactos y oportunos para un tratamiento eficaz.</p>
+            </div>
+          </div>
+
+          <div className="md:col-span-4 rounded-2xl bg-inverse-surface border border-outline/20 p-lg flex flex-col justify-between relative overflow-hidden shadow-sm shadow-secondary/5">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10" />
+            <div>
+              <div className="w-12 h-12 rounded-full bg-on-background flex items-center justify-center text-primary-fixed mb-sm border border-outline/30">
+                <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>monitor_heart</span>
+              </div>
+              <h3 className="type-headline text-on-primary mb-xs">Monitoreo Continuo</h3>
+              <p className="type-body text-surface-variant">Sistemas integrados de datos vitales en tiempo real para pacientes hospitalizados.</p>
+            </div>
+            <div className="mt-md pt-md border-t border-outline/20 flex items-end gap-xs h-16 opacity-70">
+              {[30, 50, 40, 80, 60, 90].map((h, i) => (
+                <div key={i} className="w-1/6 bg-primary-fixed rounded-t-full" style={{ height: `${h}%` }} />
+              ))}
+            </div>
+          </div>
+
+          <div className="md:col-span-5 rounded-2xl bg-surface-container border border-surface-variant p-lg flex flex-col justify-center shadow-sm shadow-secondary/5">
+            <div className="flex items-center gap-sm mb-md">
+              <span className="material-symbols-outlined text-[32px] text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+              <h3 className="type-headline text-on-surface">Junta Médica</h3>
+            </div>
+            <p className="type-body text-on-surface-variant mb-md">Más de 200 especialistas certificados colaborando en entornos clínicos avanzados para resolver los casos más complejos.</p>
+            <a className="card-link" href="/directorio">Conocer equipo <span className="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+          </div>
+
+          <div className="md:col-span-7 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
+            <img alt="Equipo médico de Aura Medical" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src="/imagenes/premium-service.jpg" />
+            <div className="absolute inset-0 bg-linear-to-t from-on-background/80 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-lg">
+              <h3 className="type-headline text-on-primary mb-xs">Recuperación Premium</h3>
+              <p className="type-body text-surface-variant">Suites privadas diseñadas bajo los más altos estándares de confort y privacidad.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── Testimonios ──────────────────────────────────── */}
+      <section className="section bg-primary/5">
+        <div className="container-page">
+          <div className="section-header">
+            <h2 className="type-display text-on-surface mb-sm">Historias de Éxito</h2>
+            <p className="type-body-lg text-on-surface-variant max-w-2xl mx-auto">La experiencia de nuestros pacientes es el verdadero reflejo de nuestro compromiso con la excelencia médica.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+            {[
+              { initials: 'CM', color: 'primary',   name: 'Carlos Mendoza',  role: 'Paciente de Cardiología',    stars: 5, quote: 'La atención en la unidad de cardiología fue excepcional. Desde el primer momento me sentí seguro en manos de profesionales que realmente se preocupan por el paciente.' },
+              { initials: 'ER', color: 'secondary', name: 'Elena Rivas',     role: 'Paciente de Cirugía General', stars: 5, quote: 'Las suites de recuperación no tienen nada que envidiarle a un hotel de cinco estrellas. Ese nivel de confort hizo que mi recuperación fuera mucho más llevadera.' },
+              { initials: 'DL', color: 'tertiary',  name: 'David Londoño',   role: 'Paciente de Neurología',     stars: 4.5, quote: 'El enfoque multidisciplinario de Aura Medical marcó la diferencia en mi diagnóstico. Varios especialistas revisaron mi caso de forma colaborativa.' },
+            ].map(({ initials, color, name, role, stars, quote }) => (
+              <div key={name} className="bg-surface p-lg rounded-2xl shadow-md relative">
+                <span className="material-symbols-outlined absolute top-lg right-lg text-primary/20 text-[64px] leading-none">format_quote</span>
+                <div className="flex items-center gap-xs text-primary mb-md">
+                  {Array.from({ length: Math.floor(stars) }).map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  ))}
+                  {stars % 1 > 0 && <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star_half</span>}
+                </div>
+                <p className="type-body text-on-surface-variant mb-lg italic relative z-10">"{quote}"</p>
+                <div className="flex items-center gap-sm">
+                  <div className={`w-12 h-12 rounded-full bg-${color}-container/20 flex items-center justify-center type-label font-bold text-${color}`}>{initials}</div>
+                  <div>
+                    <h4 className="type-label text-on-surface font-bold">{name}</h4>
+                    <p className="type-label text-on-surface-variant">{role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Aura Premium Club ────────────────────────────── */}
+      <section className="section container-page">
+        <div className="bg-inverse-surface rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl">
+          <div className="md:w-1/2 p-xl flex flex-col justify-center">
+            <div className="inline-flex items-center gap-xs text-primary-fixed mb-md">
+              <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+              <span className="type-label uppercase tracking-widest font-bold">Membresía Exclusiva</span>
+            </div>
+            <h2 className="type-display text-on-primary mb-sm">Aura Premium Club</h2>
+            <p className="type-body-lg text-surface-variant mb-lg">Acceso preferencial a medicina concierge, gestor de salud personal 24/7 y beneficios exclusivos en todas nuestras instalaciones.</p>
+            <ul className="flex flex-col gap-sm mb-lg">
+              {['Consultas sin tiempo de espera', 'Check-ups ejecutivos anuales incluidos', 'Acceso a la sala VIP y parking preferencial'].map(item => (
+                <li key={item} className="flex items-center gap-sm text-on-primary type-body">
+                  <span className="material-symbols-outlined text-primary-fixed">check_circle</span> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href={`https://wa.me/526531332053?text=${encodeURIComponent('Hola, me gustaría solicitar información sobre el Aura Premium Club.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-premium inline-flex items-center gap-sm"
+            >
+              Solicitar Información
+            </a>
+          </div>
+          <div className="md:w-1/2 relative min-h-100">
+            <img alt="Premium Service" className="absolute inset-0 w-full h-full object-cover"
+              src="/imagenes/premium-service.png" />
+            <div className="absolute inset-0 bg-linear-to-r from-inverse-surface to-transparent" />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Newsletter ───────────────────────────────────── */}
+      <section className="section px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto text-center border-t border-surface-variant">
+        <span className="material-symbols-outlined text-primary text-[48px] mb-md block" style={{ fontVariationSettings: "'FILL' 1" }}>mark_email_read</span>
+        <h2 className="type-headline text-on-surface mb-sm">Salud e Innovación en su Bandeja</h2>
+        <p className="type-body text-on-surface-variant mb-lg max-w-2xl mx-auto">Suscríbase a nuestro boletín para recibir consejos de bienestar, noticias sobre avances médicos y actualizaciones de Aura Medical.</p>
+        <NewsletterForm />
+        <p className="type-label text-on-surface-variant/60 mt-sm">Al suscribirse acepta nuestras políticas de privacidad.</p>
+      </section>
+
+    </main>
   );
 }
