@@ -7,39 +7,7 @@ export const metadata = {
 }
 
 import NewsletterForm from '@/components/NewsletterForm'
-
-const noticias = [
-  {
-    id: 1,
-    category: 'Tecnología',
-    categoryColor: 'text-primary bg-primary/10 border-primary/20',
-    date: '18 May, 2026',
-    title: 'Aura Medical integra el sistema quirúrgico Da Vinci Xi',
-    excerpt: 'Nuestra unidad de cirugía robótica incorpora la última generación del sistema Da Vinci, permitiendo intervenciones con una precisión submilimétrica y tiempos de recuperación hasta un 60% menores.',
-    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop',
-    readTime: '3 min',
-  },
-  {
-    id: 2,
-    category: 'Especialistas',
-    categoryColor: 'text-secondary bg-secondary/10 border-secondary/20',
-    date: '05 May, 2026',
-    title: 'Dr. Vargas recibe la certificación Fellow de la Sociedad Americana del Corazón',
-    excerpt: 'El Dr. Alejandro Vargas, jefe de nuestro Instituto del Corazón, fue reconocido por la AHA como Fellow por sus contribuciones a la cardiología intervencionista y su trayectoria clínica de excelencia.',
-    imageUrl: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop',
-    readTime: '2 min',
-  },
-  {
-    id: 3,
-    category: 'Institucional',
-    categoryColor: 'text-tertiary bg-tertiary/10 border-tertiary/20',
-    date: '22 Abr, 2026',
-    title: 'Apertura de la nueva Unidad de Medicina Preventiva y Bienestar',
-    excerpt: 'Inauguramos un espacio dedicado a la detección temprana y la salud integral, con programas de check-up ejecutivo, pruebas genómicas y asesoría nutricional personalizada bajo techo.',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop',
-    readTime: '4 min',
-  },
-];
+import { noticias } from '@/lib/noticias-data'
 
 export default function NoticiasPage() {
   return (
@@ -79,8 +47,9 @@ export default function NoticiasPage() {
       <section className="max-w-7xl mx-auto w-full px-margin-mobile md:px-margin-desktop py-xl grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
           {noticias.map((noticia) => (
-            <article
+            <a
               key={noticia.id}
+              href={`/noticias/${noticia.slug}`}
               className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col group"
             >
               {/* Image */}
@@ -112,13 +81,14 @@ export default function NoticiasPage() {
 
                 <p className="type-body text-on-surface-variant flex-1">{noticia.excerpt}</p>
 
-                <div className="pt-sm border-t border-outline-variant/30 mt-auto">
-                  <span className="type-label text-on-surface-variant italic">
-                    Próximamente disponible para lectura completa
+                <div className="pt-sm border-t border-outline-variant/30 mt-auto flex items-center justify-between">
+                  <span className="type-label text-primary font-semibold flex items-center gap-xs group-hover:gap-sm transition-all">
+                    Leer artículo
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                   </span>
                 </div>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>
