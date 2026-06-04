@@ -14,7 +14,7 @@ export default function Inicio() {
     <main>
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative w-full h-204.75 min-h-150 flex items-center justify-center overflow-hidden">
+      <section className="relative w-full h-[90vh] md:h-204.75 md:min-h-150 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 overflow-hidden">
           <video
             autoPlay
@@ -33,7 +33,7 @@ export default function Inicio() {
           </video>
           <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/40 to-transparent mix-blend-multiply" />
         </div>
-        <div className="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto flex flex-col items-center gap-md">
+        <div className="relative z-10 w-full text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto flex flex-col items-center gap-md">
           <div className="inline-flex items-center gap-xs bg-surface-bright/10 backdrop-blur-md border border-surface-bright/20 rounded-full px-sm py-xs text-on-primary type-label mb-sm">
             <span className="w-2 h-2 rounded-full bg-primary-fixed animate-pulse" />
             Innovación en Salud
@@ -108,7 +108,7 @@ export default function Inicio() {
       {/* ── Vanguardia tecnológica ────────────────────────── */}
       <section className="section container-page">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
-          <div className="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-2xl h-150">
+          <div className="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-2xl h-72 md:h-150">
             <img alt="Surgical Robotics" className="absolute inset-0 w-full h-full object-cover"
               src="/imagenes/surgical-robotics.png" />
             <div className="absolute inset-0 bg-linear-to-t from-on-background/90 via-on-background/20 to-transparent" />
@@ -151,7 +151,7 @@ export default function Inicio() {
           <h2 className="type-headline text-on-surface mb-sm">Infraestructura Tecnológica</h2>
           <p className="type-body text-on-surface-variant max-w-2xl mx-auto">Nuestro compromiso con la salud se refleja en la integración de sistemas de diagnóstico avanzados e instalaciones de primer nivel.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-md auto-rows-[300px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-md auto-rows-[220px] md:auto-rows-[300px]">
 
           <div className="md:col-span-8 rounded-2xl overflow-hidden relative group border border-surface-variant shadow-sm shadow-secondary/5">
             <img alt="Advanced MRI" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -272,7 +272,7 @@ export default function Inicio() {
               Solicitar Información
             </a>
           </div>
-          <div className="md:w-1/2 relative min-h-100">
+          <div className="md:w-1/2 relative min-h-64 md:min-h-100">
             <img alt="Premium Service" className="absolute inset-0 w-full h-full object-cover"
               src="/imagenes/premium-suite.jpg" />
             <div className="absolute inset-0 bg-linear-to-r from-inverse-surface to-transparent" />
