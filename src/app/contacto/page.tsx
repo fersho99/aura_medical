@@ -42,16 +42,47 @@ const especialidades = [
 ]
 
 export default function ContactoPage() {
-  const [form, setForm] = useState({ nombre: '', correo: '', telefono: '', especialidad: '', mensaje: '' })
-  const [sent, setSent] = useState(false)
+  const [form,    setForm]    = useState({ nombre: '', correo: '', telefono: '', especialidad: '', mensaje: '' })
+  const [sent,    setSent]    = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    setError('')
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const msg = `Hola, me pongo en contacto desde el sitio web.\n\n*Nombre:* ${form.nombre}\n*Correo:* ${form.correo}\n*Teléfono:* ${form.telefono}\n*Especialidad de interés:* ${form.especialidad || 'No especificada'}\n*Mensaje:* ${form.mensaje}`
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/contacto', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(form),
+      })
+
+      if (res.status === 429) {
+        setError('Demasiados intentos. Espera un momento e intenta de nuevo.')
+        return
+      }
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setError(body.error ?? 'No se pudo enviar el mensaje. Intenta de nuevo.')
+        return
+      }
+    } catch {
+      setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+      return
+    } finally {
+      setLoading(false)
+    }
+
+    // Confirmación vía WhatsApp (flujo existente)
+    const msg = `Hola, me pongo en contacto desde el sitio web.\n\n*Nombre:* ${form.nombre}\n*Teléfono:* ${form.telefono}${form.correo ? `\n*Correo:* ${form.correo}` : ''}\n*Especialidad de interés:* ${form.especialidad || 'No especificada'}\n*Mensaje:* ${form.mensaje}`
     window.open(WA_URL(msg), '_blank', 'noopener,noreferrer')
     setSent(true)
   }
@@ -103,7 +134,7 @@ export default function ContactoPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-xl">
 
           {/* Google Maps embed */}
-          <div className="rounded-3xl overflow-hidden shadow-md border border-outline-variant/30 h-[400px] lg:h-auto min-h-[400px]">
+          <div className="rounded-3xl overflow-hidden shadow-md border border-outline-variant/30 h-100 lg:h-auto min-h-100">
             <iframe
               title="Ubicación Aura Medical — San Luis Río Colorado"
               src="https://maps.google.com/maps?q=Hospital+Santa+Margarita+San+Luis+Rio+Colorado+Sonora+Mexico&z=16&output=embed"
@@ -127,7 +158,7 @@ export default function ContactoPage() {
                 <p className="type-body text-on-surface-variant max-w-sm">
                   Tu consulta fue redirigida a WhatsApp. Nuestro equipo te responderá en breve.
                 </p>
-                <button onClick={() => { setSent(false); setForm({ nombre: '', correo: '', telefono: '', especialidad: '', mensaje: '' }) }}
+                <button onClick={() => { setSent(false); setError(''); setForm({ nombre: '', correo: '', telefono: '', especialidad: '', mensaje: '' }) }}
                   className="btn-outline mt-sm">
                   Enviar otro mensaje
                 </button>
@@ -144,18 +175,22 @@ export default function ContactoPage() {
                       <label className="type-label text-on-surface-variant" htmlFor="nombre">Nombre completo *</label>
                       <input
                         id="nombre" name="nombre" type="text" required
+                        maxLength={100}
                         value={form.nombre} onChange={handleChange}
-                        placeholder="Dr. Juan Pérez"
-                        className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
+                        placeholder="Juan Pérez"
+                        disabled={loading}
+                        className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                       />
                     </div>
                     <div className="flex flex-col gap-xs">
                       <label className="type-label text-on-surface-variant" htmlFor="telefono">Teléfono *</label>
                       <input
                         id="telefono" name="telefono" type="tel" required
+                        maxLength={20}
                         value={form.telefono} onChange={handleChange}
                         placeholder="653 123 4567"
-                        className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
+                        disabled={loading}
+                        className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -164,9 +199,11 @@ export default function ContactoPage() {
                     <label className="type-label text-on-surface-variant" htmlFor="correo">Correo electrónico</label>
                     <input
                       id="correo" name="correo" type="email"
+                      maxLength={150}
                       value={form.correo} onChange={handleChange}
                       placeholder="correo@ejemplo.com"
-                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
+                      disabled={loading}
+                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                     />
                   </div>
 
@@ -175,7 +212,8 @@ export default function ContactoPage() {
                     <select
                       id="especialidad" name="especialidad"
                       value={form.especialidad} onChange={handleChange}
-                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface focus:outline-none focus:border-primary transition-colors"
+                      disabled={loading}
+                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                     >
                       <option value="">Selecciona una opción</option>
                       {especialidades.map(e => <option key={e} value={e}>{e}</option>)}
@@ -186,15 +224,33 @@ export default function ContactoPage() {
                     <label className="type-label text-on-surface-variant" htmlFor="mensaje">Mensaje *</label>
                     <textarea
                       id="mensaje" name="mensaje" required rows={4}
+                      maxLength={1000}
                       value={form.mensaje} onChange={handleChange}
                       placeholder="¿En qué podemos ayudarte?"
-                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors resize-none"
+                      disabled={loading}
+                      className="bg-surface border border-outline-variant rounded-xl px-md py-sm type-body text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors resize-none disabled:opacity-50"
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary justify-center">
-                    <span className="material-symbols-outlined text-[18px]">send</span>
-                    Enviar por WhatsApp
+                  {error && (
+                    <div className="flex items-center gap-sm bg-error-container/20 border border-error/20 rounded-xl px-md py-sm">
+                      <span className="material-symbols-outlined text-error text-[18px] shrink-0">error</span>
+                      <p className="type-label text-error">{error}</p>
+                    </div>
+                  )}
+
+                  <button type="submit" disabled={loading} className="btn-primary justify-center disabled:opacity-50">
+                    {loading ? (
+                      <>
+                        <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                        Enviando…
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-[18px]">send</span>
+                        Enviar por WhatsApp
+                      </>
+                    )}
                   </button>
                   <p className="type-label text-on-surface-variant/60 text-center">
                     Al enviar aceptas nuestra{' '}
