@@ -4,55 +4,17 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { createClient } from '@/lib/supabase';
+import { WA_NUMBER } from '@/lib/constants';
 
-// ─── Data (module-level) ──────────────────────────────────────────────────────
-
-const doctorsList = [
-  {
-    id: "alejandro-vargas",
-    name: "Dr. Alejandro Vargas",
-    specialty: "Neurología Clínica",
-    rating: 5.0,
-    reviewCount: 120,
-    location: "Torre Norte · Consultorio 402",
-    imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=150&auto=format&fit=crop",
-    color: "primary",
-    whatsappNumber: "526531332053",
-  },
-  {
-    id: "elena-montes",
-    name: "Dra. Elena Montes",
-    specialty: "Cardiología Intervencionista",
-    rating: 4.5,
-    reviewCount: 85,
-    location: "Torre Sur · Consultorio 110",
-    imageUrl: "https://images.unsplash.com/photo-1594824436998-d40b243c158b?q=80&w=150&auto=format&fit=crop",
-    color: "primary",
-    whatsappNumber: "526531332053",
-  },
-  {
-    id: "marcos-torres",
-    name: "Dr. Marcos Torres",
-    specialty: "Cirugía General y Robótica",
-    rating: 4.0,
-    reviewCount: 67,
-    location: "Bloque Quirúrgico · Piso 4",
-    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=150&auto=format&fit=crop",
-    color: "primary",
-    whatsappNumber: "526531332053",
-  },
-  {
-    id: "sofia-valerio",
-    name: "Dra. Sofía Valerio",
-    specialty: "Medicina Interna",
-    rating: 4.5,
-    reviewCount: 93,
-    location: "UCI · Piso 7",
-    imageUrl: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=150&auto=format&fit=crop",
-    color: "secondary",
-    whatsappNumber: "526531332053",
-  },
-]
+type Medico = {
+  id: string
+  nombre: string
+  especialidad: string
+  consultorio: string | null
+  telefono: string | null
+  foto_url: string | null
+}
 
 // ─── DirectorioContent — reads URL params (must be inside Suspense) ───────────
 
@@ -64,6 +26,22 @@ function DirectorioContent() {
 
   const [searchTerm,        setSearchTerm]        = useState(() => searchParams.get('q') ?? '')
   const [activeSpecialties, setActiveSpecialties] = useState<string[]>(() => searchParams.getAll('especialidad'))
+  const [medicos,           setMedicos]           = useState<Medico[]>([])
+  const [loadingMedicos,    setLoadingMedicos]    = useState(true)
+
+  // Cargar médicos activos desde Supabase
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('medicos')
+      .select('id, nombre, especialidad, consultorio, telefono, foto_url')
+      .eq('activo', true)
+      .order('nombre')
+      .then(({ data }) => {
+        setMedicos(data ?? [])
+        setLoadingMedicos(false)
+      })
+  }, [])
 
   // Sync state when URL changes (browser back/forward)
   useEffect(() => {
@@ -102,10 +80,10 @@ function DirectorioContent() {
     router.push(pathname, { scroll: false })
   }
 
-  const filteredDoctors = doctorsList.filter(doctor => {
+  const filteredDoctors = medicos.filter(medico => {
     const q = searchTerm.toLowerCase()
-    const matchesSearch    = doctor.name.toLowerCase().includes(q) || doctor.specialty.toLowerCase().includes(q)
-    const matchesSpecialty = activeSpecialties.length === 0 || activeSpecialties.some(s => doctor.specialty.includes(s))
+    const matchesSearch    = medico.nombre.toLowerCase().includes(q) || medico.especialidad.toLowerCase().includes(q)
+    const matchesSpecialty = activeSpecialties.length === 0 || activeSpecialties.some(s => medico.especialidad.includes(s))
     return matchesSearch && matchesSpecialty
   })
 
@@ -241,51 +219,55 @@ function DirectorioContent() {
           </div>
 
           {/* Doctor Cards Grid */}
+          {loadingMedicos ? (
+            <div className="flex items-center justify-center py-xl gap-3 text-on-surface-variant">
+              <span className="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
+              Cargando especialistas…
+            </div>
+          ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-md">
-            {filteredDoctors.map(doctor => {
-              const waMsg = encodeURIComponent(`Hola, me gustaría agendar una cita con ${doctor.name}.`)
-              const waUrl = `https://wa.me/${doctor.whatsappNumber}?text=${waMsg}`
+            {filteredDoctors.map(medico => {
+              const waNum = medico.telefono?.replace(/\D/g, '') || WA_NUMBER
+              const waMsg = encodeURIComponent(`Hola, me gustaría agendar una cita con ${medico.nombre}.`)
+              const waUrl = `https://wa.me/${waNum}?text=${waMsg}`
               return (
-                <div key={doctor.id} className="bg-surface-container-lowest rounded-2xl p-md flex flex-col gap-md shadow-md shadow-primary/5 border border-outline-variant/30 hover:shadow-lg transition-shadow">
+                <div key={medico.id} className="bg-surface-container-lowest rounded-2xl p-md flex flex-col gap-md shadow-md shadow-primary/5 border border-outline-variant/30 hover:shadow-lg transition-shadow">
                   <div className="flex gap-md items-start">
                     <div className="relative shrink-0">
-                      <img
-                        alt={doctor.name}
-                        className={`w-20 h-20 rounded-full object-cover border-2 p-0.5 ${doctor.color === 'primary' ? 'border-primary' : 'border-secondary'}`}
-                        src={doctor.imageUrl}
-                      />
-                      <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-surface-container-lowest ${doctor.color === 'primary' ? 'bg-primary' : 'bg-secondary'}`} />
+                      {medico.foto_url ? (
+                        <img
+                          alt={medico.nombre}
+                          className="w-20 h-20 rounded-full object-cover border-2 p-0.5 border-primary"
+                          src={medico.foto_url}
+                          onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
+                      ) : (
+                        <div className="w-20 h-20 rounded-full bg-teal-500/20 border-2 border-primary flex items-center justify-center text-primary text-2xl font-bold">
+                          {medico.nombre.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-surface-container-lowest bg-primary" />
                     </div>
                     <div className="grow">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="type-headline text-on-surface">{doctor.name}</h3>
-                          <p className={`type-body ${doctor.color === 'primary' ? 'text-primary' : 'text-secondary'}`}>{doctor.specialty}</p>
+                          <h3 className="type-headline text-on-surface">{medico.nombre}</h3>
+                          <p className="type-body text-primary">{medico.especialidad}</p>
                         </div>
-                        <button className="text-outline hover:text-primary transition-colors" aria-label="Guardar en favoritos">
-                          <span className="material-symbols-outlined">favorite_border</span>
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-xs mt-xs">
-                        <div className="flex text-[#FFD700]">
-                          {[1,2,3,4].map(n => (
-                            <span key={n} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                          ))}
-                          <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: doctor.rating === 5 ? "'FILL' 1" : "'FILL' 0" }}>star</span>
-                        </div>
-                        <span className="font-data-mono text-data-mono text-on-surface-variant">({doctor.reviewCount} opiniones)</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-xs px-sm py-xs bg-surface rounded-xl border border-outline-variant/30 w-fit">
-                    <span className={`material-symbols-outlined text-[18px] ${doctor.color === 'primary' ? 'text-primary' : 'text-secondary'}`}>location_on</span>
-                    <span className="font-data-mono text-data-mono text-on-surface-variant">{doctor.location}</span>
-                  </div>
+                  {medico.consultorio && (
+                    <div className="flex items-center gap-xs px-sm py-xs bg-surface rounded-xl border border-outline-variant/30 w-fit">
+                      <span className="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                      <span className="font-data-mono text-data-mono text-on-surface-variant">{medico.consultorio}</span>
+                    </div>
+                  )}
 
                   {/* Acciones */}
                   <div className="flex gap-sm mt-auto pt-sm border-t border-outline-variant/30">
-                    <a href={`/directorio/${doctor.id}`} className="grow h-12 rounded-xl border border-outline text-on-surface type-label font-semibold hover:bg-surface-container transition-all flex items-center justify-center">
+                    <a href={`/directorio/${medico.id}`} className="grow h-12 rounded-xl border border-outline text-on-surface type-label font-semibold hover:bg-surface-container transition-all flex items-center justify-center">
                       Ver Perfil
                     </a>
                     <a
@@ -304,8 +286,9 @@ function DirectorioContent() {
               )
             })}
           </div>
+          )}
 
-          {filteredDoctors.length === 0 && (
+          {!loadingMedicos && filteredDoctors.length === 0 && (
             <div className="text-center py-xl text-on-surface-variant">
               <span className="material-symbols-outlined text-[48px] block mb-sm">search_off</span>
               <p className="type-headline">Sin resultados</p>

@@ -1,55 +1,18 @@
 /** Página: Nosotros — Historia, misión y equipo directivo de Aura Medical */
 
+import { getContenido, getHitos } from '@/lib/contenido'
+import AnimatedStat from '@/components/AnimatedStat'
+
 export const metadata = {
   title: 'Nosotros | Aura Medical',
   description: 'Conoce la historia, misión, visión y valores de Aura Medical. Más de una década de excelencia médica en Chihuahua, México.',
 }
 
-const cifras = [
-  { valor: '12+', label: 'Años de trayectoria' },
-  { valor: '200+', label: 'Especialistas certificados' },
-  { valor: '50,000+', label: 'Pacientes atendidos' },
-  { valor: '98%', label: 'Satisfacción del paciente' },
-]
-
-const valores = [
-  {
-    icon: 'favorite',
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    title: 'Humanismo',
-    desc: 'Cada paciente es una persona, no un expediente. Nuestra práctica médica está guiada por la empatía, el respeto y la dignidad en todo momento.',
-  },
-  {
-    icon: 'science',
-    color: 'text-secondary',
-    bg: 'bg-secondary/10',
-    title: 'Excelencia Científica',
-    desc: 'Adoptamos protocolos clínicos basados en la evidencia más actualizada y fomentamos la investigación continua entre nuestros especialistas.',
-  },
-  {
-    icon: 'shield',
-    color: 'text-tertiary',
-    bg: 'bg-tertiary/10',
-    title: 'Seguridad',
-    desc: 'La seguridad del paciente es innegociable. Implementamos estándares internacionales JCI y sistemas de doble verificación en todos los procedimientos.',
-  },
-  {
-    icon: 'lightbulb',
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    title: 'Innovación',
-    desc: 'Invertimos constantemente en tecnología de vanguardia y en la formación continua de nuestros equipos para mantenernos a la vanguardia médica.',
-  },
-]
-
-const hitos = [
-  { year: '2012', title: 'Fundación', desc: 'Aura Medical abre sus puertas con 4 especialidades y 18 médicos fundadores comprometidos con un modelo de atención diferente.' },
-  { year: '2015', title: 'Acreditación JCI', desc: 'Obtenemos la acreditación de la Joint Commission International, convirtiéndonos en uno de los primeros hospitales privados en el norte de México en alcanzar este estándar.' },
-  { year: '2018', title: 'Unidad de Oncología', desc: 'Inauguramos nuestro Centro de Oncología de Precisión, con radioterapia de intensidad modulada y el primer comité multidisciplinario de tumores de la región.' },
-  { year: '2021', title: 'Cirugía Robótica', desc: 'Integramos el primer sistema Da Vinci en Chihuahua, marcando el inicio de nuestra era de cirugía de mínima invasión de alta precisión.' },
-  { year: '2024', title: 'Expansión Digital', desc: 'Lanzamos nuestra plataforma de gestión médica y telemedicina, acercando a nuestros especialistas a pacientes en toda la región noroeste de México.' },
-  { year: '2026', title: 'Medicina Preventiva', desc: 'Apertura de la Unidad de Medicina Preventiva y Bienestar, consolidando nuestro modelo de atención proactiva centrado en la salud a largo plazo.' },
+const COLOR_CYCLE = [
+  { color: 'text-primary',   bg: 'bg-primary/10'   },
+  { color: 'text-secondary', bg: 'bg-secondary/10' },
+  { color: 'text-tertiary',  bg: 'bg-tertiary/10'  },
+  { color: 'text-primary',   bg: 'bg-primary/10'   },
 ]
 
 const directivos = [
@@ -76,12 +39,40 @@ const directivos = [
   },
 ]
 
-export default function NosotrosPage() {
+export default async function NosotrosPage() {
+  const [contenido, hitos] = await Promise.all([getContenido(), getHitos()])
+  const n = contenido.nosotros ?? {}
+  const v = contenido.nosotros_valores ?? {}
+
+  const stripSuffix = (s: string) => s.replace(/[+%]+$/, '')
+  const stats = [
+    { valor: stripSuffix(n.años_trayectoria || '12'),     sufijo: '+', label: n.años_label         || 'Años de trayectoria' },
+    { valor: stripSuffix(n.especialistas    || '200'),    sufijo: '+', label: n.especialistas_label || 'Especialistas certificados' },
+    { valor: stripSuffix(n.pacientes        || '50,000'), sufijo: '+', label: n.pacientes_label     || 'Pacientes atendidos' },
+    { valor: stripSuffix(n.satisfaccion     || '98'),     sufijo: '%', label: n.satisfaccion_label  || 'Satisfacción del paciente' },
+  ]
+
+  const DEFAULT_ICONS  = ['favorite', 'science', 'security', 'lightbulb']
+  const DEFAULT_TITLES = ['Humanismo', 'Excelencia Científica', 'Seguridad', 'Innovación']
+  const DEFAULT_DESCS  = [
+    'Cada paciente es una persona, no un expediente.',
+    'Adoptamos protocolos clínicos basados en la evidencia.',
+    'La seguridad del paciente es innegociable.',
+    'Invertimos constantemente en tecnología de vanguardia.',
+  ]
+  const cards = [1, 2, 3, 4].map((num, i) => ({
+    icon:  v[`card_${num}_icono`]  || DEFAULT_ICONS[i],
+    color: COLOR_CYCLE[i].color,
+    bg:    COLOR_CYCLE[i].bg,
+    title: v[`card_${num}_titulo`] || DEFAULT_TITLES[i],
+    desc:  v[`card_${num}_desc`]   || DEFAULT_DESCS[i],
+  }))
+
   return (
     <main>
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative w-full h-[55vh] min-h-[380px] flex items-center overflow-hidden">
+      <section className="relative w-full h-[55vh] min-h-95 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             alt="Equipo Aura Medical"
@@ -93,13 +84,13 @@ export default function NosotrosPage() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-white">
           <div className="inline-flex items-center gap-xs bg-white/10 border border-white/20 rounded-full px-sm py-xs type-label mb-sm backdrop-blur-sm">
             <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-            Desde 2012
+            {n.hero_badge || 'Desde 2012'}
           </div>
           <h1 className="type-display mb-sm max-w-2xl">
-            Una institución construida sobre la confianza médica
+            {n.hero_titulo || 'Una institución construida sobre la confianza médica'}
           </h1>
           <p className="type-body-lg text-white/75 max-w-2xl">
-            Más de una década redefiniendo los estándares de la medicina privada en el norte de México.
+            {n.hero_subtitulo || 'Más de una década redefiniendo los estándares de la medicina privada en el norte de México.'}
           </p>
         </div>
       </section>
@@ -108,11 +99,8 @@ export default function NosotrosPage() {
       <section className="bg-primary py-md">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-md text-center">
-            {cifras.map(({ valor, label }) => (
-              <div key={label}>
-                <p className="text-3xl md:text-4xl font-black text-primary-fixed tracking-tight">{valor}</p>
-                <p className="type-label text-on-primary/70 mt-xs">{label}</p>
-              </div>
+            {stats.map(({ valor, sufijo, label }) => (
+              <AnimatedStat key={label} valor={valor} sufijo={sufijo} label={label} />
             ))}
           </div>
         </div>
@@ -145,7 +133,7 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── Historia ─────────────────────────────────────── */}
-      <section className="py-lg bg-surface-container-low">
+      <section id="historia" className="py-lg bg-surface-container-low">
         <div className="container-page">
           <div className="text-center mb-lg">
             <h2 className="type-display text-on-surface mb-xs">Nuestra Historia</h2>
@@ -153,10 +141,10 @@ export default function NosotrosPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
             {hitos.map((hito) => (
-              <div key={hito.year} className="bg-surface rounded-2xl p-md border border-outline-variant/30 shadow-sm">
-                <p className="type-label text-primary font-bold mb-xs">{hito.year}</p>
-                <h3 className="type-headline text-on-surface mb-xs">{hito.title}</h3>
-                <p className="type-body text-on-surface-variant">{hito.desc}</p>
+              <div key={hito.año} className="bg-surface rounded-2xl p-md border border-outline-variant/30 shadow-sm">
+                <p className="type-label text-primary font-bold mb-xs">{hito.año}</p>
+                <h3 className="type-headline text-on-surface mb-xs">{hito.titulo}</h3>
+                <p className="type-body text-on-surface-variant">{hito.descripcion}</p>
               </div>
             ))}
           </div>
@@ -164,13 +152,13 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── Valores ──────────────────────────────────────── */}
-      <section className="py-lg container-page">
+      <section id="valores" className="py-lg container-page">
         <div className="text-center mb-lg">
-          <h2 className="type-display text-on-surface mb-xs">Nuestros Valores</h2>
-          <p className="type-body text-on-surface-variant max-w-2xl mx-auto">Los principios que guían cada decisión clínica e inversión que realizamos.</p>
+          <h2 className="type-display text-on-surface mb-xs">{v.titulo || 'Nuestros Valores'}</h2>
+          <p className="type-body text-on-surface-variant max-w-2xl mx-auto">{v.subtitulo || 'Los principios que guían cada decisión clínica e inversión que realizamos.'}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-          {valores.map(({ icon, color, bg, title, desc }) => (
+          {cards.map(({ icon, color, bg, title, desc }) => (
             <div key={title} className="card flex gap-md">
               <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center ${color} shrink-0`}>
                 <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>

@@ -1,9 +1,14 @@
+import { getUnidades, getContenido } from '@/lib/contenido'
+
 export const metadata = {
   title: 'Unidades Médicas | Aura Medical',
   description: 'Instalaciones de clase mundial: Baby Port, Imagenología, UCI, Bloque Quirúrgico, Urgencias 24/7 y Medicina Preventiva en Chihuahua.',
 }
 
-export default function UnidadesMedicasPage() {
+export default async function UnidadesMedicasPage() {
+  const [unidades, contenido] = await Promise.all([getUnidades(), getContenido()])
+  const u = contenido.uni_hero ?? {}
+
   return (
     <main>
 
@@ -39,25 +44,25 @@ export default function UnidadesMedicasPage() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-sm px-md py-xs bg-primary/20 text-primary-fixed-dim rounded-full type-label border border-primary/30 mb-md backdrop-blur-sm">
               <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>domain</span>
-              Infraestructura de Clase Mundial
+              {u.badge || 'Infraestructura de Clase Mundial'}
             </div>
             <h1 className="type-display font-bold text-white mb-md leading-tight">
-              Unidades Médicas de <br />
+              {u.titulo || 'Unidades Médicas de'} <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-fixed to-secondary-fixed-dim">
-                Alta Especialidad
+                {u.titulo_2 || 'Alta Especialidad'}
               </span>
             </h1>
             <p className="type-body-lg text-slate-300 mb-lg">
-              Instalaciones diseñadas con los más altos estándares internacionales, integrando tecnología de vanguardia y confort premium para cada etapa de su atención.
+              {u.subtitulo || 'Instalaciones diseñadas con los más altos estándares internacionales, integrando tecnología de vanguardia y confort premium para cada etapa de su atención.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-sm">
               <a href="#unidades" className="bg-primary-container text-on-primary-container hover:bg-primary-fixed hover:text-on-primary-fixed type-label px-lg py-sm rounded-full emerald-glow transition-all duration-300 flex items-center gap-xs">
-                Conocer Instalaciones
+                {u.boton_1 || 'Conocer Instalaciones'}
                 <span className="material-symbols-outlined">arrow_forward</span>
               </a>
               <a href="https://wa.me/526531332053?text=Hola%2C%20me%20gustar%C3%ADa%20agendar%20una%20visita%20a%20las%20instalaciones%20de%20Aura%20Medical." target="_blank" rel="noopener noreferrer" className="bg-transparent border border-white text-white hover:bg-white/10 type-label px-lg py-sm rounded-full transition-all duration-300 flex items-center gap-xs">
                 <span className="material-symbols-outlined">calendar_month</span>
-                Agendar Visita
+                {u.boton_2 || 'Agendar Visita'}
               </a>
             </div>
           </div>
@@ -99,139 +104,38 @@ export default function UnidadesMedicasPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
-
-            {/* Unit 1: Baby Port */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Maternidad Baby Port"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-baby-port.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>child_care</span>
+            {unidades.map(unidad => (
+              <div key={unidad.id} className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
+                <div className="h-56 overflow-hidden relative">
+                  {unidad.imagen_url ? (
+                    <img alt={unidad.nombre}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={unidad.imagen_url} />
+                  ) : (
+                    <div className="w-full h-full bg-surface-container-lowest flex items-center justify-center">
+                      <span className="material-symbols-outlined text-primary text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                        {unidad.icono || 'local_hospital'}
+                      </span>
+                    </div>
+                  )}
+                  <div className="absolute top-md left-md glass-card p-xs rounded-xl">
+                    <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {unidad.icono || 'local_hospital'}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-md flex flex-col grow">
+                  <h3 className="type-headline text-on-surface mb-xs">{unidad.nombre}</h3>
+                  {unidad.descripcion && (
+                    <p className="type-body text-on-surface-variant mb-lg grow">{unidad.descripcion}</p>
+                  )}
+                  <a href={`/unidades/${unidad.slug}`} className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
+                    Explorar Unidad
+                    <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                  </a>
                 </div>
               </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Baby Port</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">Área Materno-Infantil con suites privadas y tecnología de monitoreo fetal avanzado.</p>
-                <a href="/unidades/baby-port" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Unit 2: Imagenología */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Centro de Diagnóstico por Imagen"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-imagenologia.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>biotech</span>
-                </div>
-              </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Centro de Imagenología</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">Diagnóstico de precisión con resonancia magnética 3T y tomografía de alta resolución.</p>
-                <a href="/unidades/imagenologia" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Unit 3: UCI */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Unidad de Cuidados Intensivos"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-uci.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>monitoring</span>
-                </div>
-              </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Unidad de Cuidados Intensivos</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">UCI con atención especializada 24/7 y sistemas de soporte vital de última generación.</p>
-                <a href="/unidades/uci" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Unit 4: Bloque Quirúrgico */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Bloque Quirúrgico Inteligente"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-quirofano.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>precision_manufacturing</span>
-                </div>
-              </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Bloque Quirúrgico Inteligente</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">Quirófanos integrados con asistencia robótica Da Vinci y técnicas de mínima invasión.</p>
-                <a href="/unidades/quirofano" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Unit 5: Urgencias */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Urgencias 24/7"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-urgencias.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-error" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
-                </div>
-              </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Urgencias 24/7</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">Atención inmediata con triage inteligente y especialistas siempre disponibles para cualquier emergencia.</p>
-                <a href="/unidades/urgencias" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Unit 6: Medicina Preventiva */}
-            <div className="group flex flex-col bg-surface rounded-3xl overflow-hidden shadow-md shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  alt="Medicina Preventiva y Check-up"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src="/imagenes/card-medicina-preventiva.jpg"
-                />
-                <div className="absolute top-md left-md glass-card p-xs rounded-xl">
-                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>health_and_safety</span>
-                </div>
-              </div>
-              <div className="p-md flex flex-col grow">
-                <h3 className="type-headline text-on-surface mb-xs">Medicina Preventiva</h3>
-                <p className="type-body text-on-surface-variant mb-lg grow">Programas de Check-up ejecutivos en un ambiente de total privacidad y confort premium.</p>
-                <a href="/unidades/medicina-preventiva" className="type-label text-primary flex items-center gap-xs group/btn hover:text-primary-container transition-colors">
-                  Explorar Unidad
-                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
