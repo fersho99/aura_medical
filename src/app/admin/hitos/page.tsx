@@ -34,10 +34,10 @@ export default function HitosAdminPage() {
     setError('')
     const { data, error } = await supabase
       .from('hitos')
-      .select('id, año, titulo, descripcion, orden, activo')
+      .select('*')
       .order('orden')
     if (error) { setError('No se pudieron cargar los hitos.') }
-    else { setItems(data ?? []) }
+    else { setItems((data as unknown as Hito[]) ?? []) }
     setLoading(false)
   }
 
