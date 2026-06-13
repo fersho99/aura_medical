@@ -1,9 +1,14 @@
+import { getEspecialidades, getContenido } from '@/lib/contenido'
+
 export const metadata = {
   title: 'Especialidades Médicas | Aura Medical',
   description: 'Descubra nuestras especialidades médicas: Cardiología, Neurología, Oncología y Pediatría con tecnología avanzada y los mejores especialistas de Chihuahua.',
 }
 
-export default function EspecialidadesPage() {
+export default async function EspecialidadesPage() {
+  const [especialidades, contenido] = await Promise.all([getEspecialidades(), getContenido()])
+  const e = contenido.esp_hero ?? {}
+
   return (
     <main>
 
@@ -20,20 +25,20 @@ export default function EspecialidadesPage() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-center md:text-left text-white">
           <div className="inline-flex items-center gap-sm bg-primary-container/20 text-primary-fixed border border-primary-fixed/30 rounded-full px-md py-sm mb-md backdrop-blur-sm">
             <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-            <span className="type-label tracking-wider uppercase">Excelencia en Salud</span>
+            <span className="type-label tracking-wider uppercase">{e.badge || 'Excelencia en Salud'}</span>
           </div>
           <h1 className="type-display font-bold mb-md max-w-3xl leading-tight">
-            Red Integral de <br />
+            {e.titulo || 'Red Integral de'} <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-fixed to-secondary-fixed-dim">
-              Especialidades Médicas
+              {e.titulo_2 || 'Especialidades Médicas'}
             </span>
           </h1>
           <p className="type-body-lg text-surface-container-high max-w-2xl mb-lg">
-            Atención especializada con tecnología de vanguardia y equipos multidisciplinarios. Nuestro compromiso es su salud integral.
+            {e.subtitulo || 'Atención especializada con tecnología de vanguardia y equipos multidisciplinarios. Nuestro compromiso es su salud integral.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-sm justify-center md:justify-start">
             <button className="bg-linear-to-r from-primary to-primary-container text-on-primary type-body font-semibold px-lg py-md rounded-full emerald-glow transition-all duration-300 flex items-center justify-center gap-sm">
-              Explorar Especialidades
+              {e.boton_texto || 'Explorar Especialidades'}
               <span className="material-symbols-outlined">arrow_downward</span>
             </button>
           </div>
@@ -77,172 +82,63 @@ export default function EspecialidadesPage() {
         </div>
       </section>
 
-      {/* Detailed Specialties */}
-      <section className="section bg-background">
-        <div className="container-page flex flex-col gap-xl">
-
-          {/* Cardiología */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
-            <div className="order-2 lg:order-1 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(2,62,138,0.12)] relative group">
-              <img
-                alt="Cardiology Lab"
-                className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
-                src="/imagenes/cardiologia.png"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-            <div className="order-1 lg:order-2">
-              <div className="inline-flex items-center gap-sm text-error bg-error-container/50 px-md py-sm rounded-full mb-md">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>monitor_heart</span>
-                <span className="type-label uppercase tracking-wide">Cardiología</span>
-              </div>
-              <h2 className="type-display font-bold text-on-surface mb-md">Cuidado Cardiovascular Avanzado</h2>
-              <p className="type-body-lg text-on-surface-variant mb-lg">
-                Nuestro Instituto del Corazón combina la experiencia de cardiólogos de renombre internacional con tecnología de diagnóstico no invasivo y salas de hemodinamia de última generación para el tratamiento integral de patologías cardiovasculares.
-              </p>
-              <ul className="flex flex-col gap-sm mb-lg">
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Hemodinamia Avanzada</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Ecocardiografía 3D</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Unidad de Dolor Torácico 24/7</span>
-                </li>
-              </ul>
-              <a href="/especialidades/cardiologia" className="border-2 border-outline hover:border-primary text-on-surface hover:text-primary type-label px-md py-sm rounded-full transition-all duration-300 flex items-center gap-sm group">
-                Saber Más sobre Cardiología
-                <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </a>
-            </div>
+      {/* Especialidades dinámicas */}
+      {especialidades.length > 0 && (
+        <section className="section bg-background">
+          <div className="container-page flex flex-col gap-xl">
+            {especialidades.map((esp, i) => {
+              const imgLeft = i % 2 === 0
+              return (
+                <div key={esp.id} className="grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
+                  {/* Imagen */}
+                  <div className={`rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(2,62,138,0.12)] relative group ${imgLeft ? 'order-2 lg:order-1' : 'order-2'}`}>
+                    {esp.imagen_url ? (
+                      <img alt={esp.nombre}
+                        className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
+                        src={esp.imagen_url} />
+                    ) : (
+                      <div className="w-full h-125 bg-surface-container-lowest flex items-center justify-center">
+                        <span className="material-symbols-outlined text-primary text-[80px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                          {esp.icono || 'medical_services'}
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  {/* Texto */}
+                  <div className={imgLeft ? 'order-1 lg:order-2' : 'order-1'}>
+                    <div className="inline-flex items-center gap-sm text-primary bg-primary-container/30 px-md py-sm rounded-full mb-md">
+                      <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                        {esp.icono || 'medical_services'}
+                      </span>
+                      <span className="type-label uppercase tracking-wide">{esp.nombre}</span>
+                    </div>
+                    <h2 className="type-display font-bold text-on-surface mb-md">{esp.nombre}</h2>
+                    {esp.descripcion_corta && (
+                      <p className="type-body-lg text-on-surface-variant mb-lg">{esp.descripcion_corta}</p>
+                    )}
+                    {esp.servicios.length > 0 && (
+                      <ul className="flex flex-col gap-sm mb-lg">
+                        {esp.servicios.map(servicio => (
+                          <li key={servicio} className="flex items-start gap-sm">
+                            <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
+                            <span className="type-body text-on-surface-variant">{servicio}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <a href={`/especialidades/${esp.slug}`}
+                      className="border-2 border-outline hover:border-primary text-on-surface hover:text-primary type-label px-md py-sm rounded-full transition-all duration-300 flex items-center gap-sm group w-fit">
+                      Saber Más sobre {esp.nombre}
+                      <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                  </div>
+                </div>
+              )
+            })}
           </div>
-
-          {/* Neurología */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
-            <div>
-              <div className="inline-flex items-center gap-sm text-secondary bg-secondary-container/50 px-md py-sm rounded-full mb-md">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
-                <span className="type-label uppercase tracking-wide">Neurología</span>
-              </div>
-              <h2 className="type-display font-bold text-on-surface mb-md">Neurociencias Clínicas</h2>
-              <p className="type-body-lg text-on-surface-variant mb-lg">
-                Especialistas dedicados al diagnóstico y tratamiento de trastornos complejos del sistema nervioso central y periférico. Abordamos patologías neurológicas con un enfoque integral que incluye neurocirugía de precisión y neurorrehabilitación.
-              </p>
-              <ul className="flex flex-col gap-sm mb-lg">
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Neuroimagen de Alta Resolución</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Tratamiento Integral de ACV</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Clínica Especializada de Memoria</span>
-                </li>
-              </ul>
-              <a href="/especialidades/neurologia" className="border-2 border-outline hover:border-secondary text-on-surface hover:text-secondary type-label px-md py-sm rounded-full transition-all duration-300 flex items-center gap-sm group">
-                Saber Más sobre Neurología
-                <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </a>
-            </div>
-            <div className="rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(2,62,138,0.12)] relative group">
-              <img
-                alt="Neurology Diagnostics"
-                className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
-                src="/imagenes/advanced-mri.png"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          </div>
-
-          {/* Oncología */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
-            <div className="order-2 lg:order-1 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(2,62,138,0.12)] relative group">
-              <img
-                alt="Surgical Robot"
-                className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
-                src="/imagenes/surgical-robotics.png"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-            <div className="order-1 lg:order-2">
-              <div className="inline-flex items-center gap-sm text-tertiary bg-tertiary-container/50 px-md py-sm rounded-full mb-md">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>health_metrics</span>
-                <span className="type-label uppercase tracking-wide">Oncología</span>
-              </div>
-              <h2 className="type-display font-bold text-on-surface mb-md">Centro de Oncología de Precisión</h2>
-              <p className="type-body-lg text-on-surface-variant mb-lg">
-                Proporcionamos terapias contra el cáncer personalizadas y basadas en evidencia. Nuestro comité de tumores multidisciplinario evalúa cada caso para diseñar el plan de tratamiento más efectivo y menos invasivo posible.
-              </p>
-              <ul className="flex flex-col gap-sm mb-lg">
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-tertiary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Cirugía Robótica Da Vinci</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-tertiary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Inmunoterapia Personalizada</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-tertiary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Radioterapia de Precisión</span>
-                </li>
-              </ul>
-              <a href="/especialidades/oncologia" className="border-2 border-outline hover:border-tertiary text-on-surface hover:text-tertiary type-label px-md py-sm rounded-full transition-all duration-300 flex items-center gap-sm group">
-                Saber Más sobre Oncología
-                <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Pediatría */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg items-center">
-            <div>
-              <div className="inline-flex items-center gap-sm text-primary bg-primary-container/30 px-md py-sm rounded-full mb-md">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>child_care</span>
-                <span className="type-label uppercase tracking-wide">Pediatría</span>
-              </div>
-              <h2 className="type-display font-bold text-on-surface mb-md">Cuidado Pediátrico Especializado</h2>
-              <p className="type-body-lg text-on-surface-variant mb-lg">
-                Entornos diseñados específicamente para el bienestar infantil. Nuestros especialistas pediátricos brindan atención médica compasiva y de la más alta calidad, desde cuidados preventivos hasta tratamientos complejos.
-              </p>
-              <ul className="flex flex-col gap-sm mb-lg">
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Neonatología de Alta Complejidad</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Cirugía Pediátrica Mínimamente Invasiva</span>
-                </li>
-                <li className="flex items-start gap-sm">
-                  <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-                  <span className="type-body text-on-surface-variant">Control de Niño Sano y Desarrollo</span>
-                </li>
-              </ul>
-              <a href="/especialidades/pediatria" className="border-2 border-outline hover:border-primary text-on-surface hover:text-primary type-label px-md py-sm rounded-full transition-all duration-300 flex items-center gap-sm group">
-                Saber Más sobre Pediatría
-                <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </a>
-            </div>
-            <div className="rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(2,62,138,0.12)] relative group">
-              <img
-                alt="Pediatric Ward"
-                className="w-full h-125 object-cover transition-transform duration-700 group-hover:scale-105"
-                src="https://images.unsplash.com/photo-1632833239869-a37e3a5806d2?q=80&w=2059&auto=format&fit=crop"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          </div>
-
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Premium CTA */}
       <section className="section bg-on-secondary-fixed text-white relative overflow-hidden">

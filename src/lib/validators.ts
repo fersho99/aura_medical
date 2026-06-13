@@ -130,6 +130,70 @@ export function validateCita(raw: Record<string, unknown>): ValidationResult<Cit
   return { ok: true, errors: [], data: { nombre, telefono, correo, area, horario, detalles } }
 }
 
+// ─── Testimonio ───────────────────────────────────────────────────────────────
+
+const VALID_COLORS        = ['primary', 'secondary', 'tertiary'] as const
+const VALID_CALIFICACIONES = [3, 3.5, 4, 4.5, 5] as const
+
+export interface TestimonioPayload {
+  nombre:       string
+  cargo:        string | null
+  testimonio:   string
+  calificacion: number
+  iniciales:    string
+  color:        string
+  activo:       boolean
+  orden:        number
+}
+
+export function validateTestimonio(raw: Record<string, unknown>): ValidationResult<TestimonioPayload> {
+  const errors: ValidationError[] = []
+
+  const nombre     = sanitizeText(raw.nombre,      60)
+  const cargo      = sanitizeText(raw.cargo,      150)
+  const testimonio = sanitizeText(raw.testimonio, 1000)
+  const iniciales  = sanitizeText(raw.iniciales,    2).toUpperCase().replace(/[^A-ZÁÉÍÓÚÑ]/gi, '').slice(0, 2)
+  const colorRaw   = sanitizeText(raw.color,       20)
+  const califRaw   = parseFloat(String(raw.calificacion))
+  const ordenRaw   = parseInt(String(raw.orden), 10)
+  const activo     = raw.activo === true || raw.activo === 'true'
+
+  if (!nombre)
+    errors.push({ field: 'nombre', message: 'El nombre es requerido.' })
+  else if (!isValidName(nombre))
+    errors.push({ field: 'nombre', message: 'El nombre contiene caracteres no válidos.' })
+
+  if (!testimonio)
+    errors.push({ field: 'testimonio', message: 'El testimonio es requerido.' })
+  else if (testimonio.length < 10)
+    errors.push({ field: 'testimonio', message: 'El testimonio es demasiado corto (mínimo 10 caracteres).' })
+
+  if (!VALID_COLORS.includes(colorRaw as typeof VALID_COLORS[number]))
+    errors.push({ field: 'color', message: 'Color no válido.' })
+
+  if (!VALID_CALIFICACIONES.includes(califRaw as typeof VALID_CALIFICACIONES[number]))
+    errors.push({ field: 'calificacion', message: 'Calificación no válida.' })
+
+  if (isNaN(ordenRaw) || ordenRaw < 0 || ordenRaw > 9999)
+    errors.push({ field: 'orden', message: 'El orden debe ser un número entre 0 y 9999.' })
+
+  if (errors.length > 0) return { ok: false, errors, data: null }
+
+  return {
+    ok: true, errors: [],
+    data: {
+      nombre,
+      cargo:        cargo || null,
+      testimonio,
+      calificacion: califRaw,
+      iniciales:    iniciales || nombre.slice(0, 2).toUpperCase(),
+      color:        colorRaw,
+      activo,
+      orden:        ordenRaw,
+    },
+  }
+}
+
 export interface NewsletterPayload { correo: string }
 
 export function validateNewsletter(raw: Record<string, unknown>): ValidationResult<NewsletterPayload> {

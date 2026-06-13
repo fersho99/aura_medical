@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         headers: [
           // ── Cabeceras existentes ──────────────────────────────────────────
           { key: "X-Content-Type-Options",  value: "nosniff" },
-          { key: "X-Frame-Options",          value: "DENY" },
+          { key: "X-Frame-Options",          value: "SAMEORIGIN" },
           { key: "X-XSS-Protection",         value: "1; mode=block" },
           { key: "Referrer-Policy",           value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy",        value: "camera=(), microphone=(), geolocation=()" },
@@ -29,8 +29,10 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               // Imágenes: self + data URIs + HTTPS (Unsplash, Supabase Storage)
               "img-src 'self' data: blob: https:",
-              // Iframes: Google Maps
-              "frame-src https://maps.google.com https://www.google.com",
+              // Iframes que esta página puede cargar: Google Maps
+              "frame-src 'self' https://maps.google.com https://www.google.com",
+              // Quién puede embeber ESTA página en un iframe (mismo origen = admin preview)
+              "frame-ancestors 'self'",
               // Conexiones API: self + Supabase (HTTP + WebSocket)
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
               // Sin plugins (Flash, etc.)

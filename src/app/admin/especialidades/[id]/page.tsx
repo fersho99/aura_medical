@@ -1,0 +1,213 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase'
+import { useRouter, useParams } from 'next/navigation'
+import Link from 'next/link'
+import { sanitizeText, isValidName } from '@/lib/validators'
+
+const inputCls = 'w-full mt-1 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl border border-gray-700 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition placeholder:text-gray-600 disabled:opacity-50'
+const labelCls = 'text-xs font-medium text-gray-400 uppercase tracking-wider'
+
+export default function EditarEspecialidadPage() {
+  const router   = useRouter()
+  const params   = useParams()
+  const id       = params.id as string
+  const supabase = createClient()
+
+  const [loading, setLoading] = useState(true)
+  const [saving,  setSaving]  = useState(false)
+  const [error,   setError]   = useState('')
+
+  const [form, setForm] = useState({
+    nombre: '', descripcion_corta: '', descripcion: '',
+    imagen_url: '', icono: '', servicios: '', activo: true, orden: 0,
+  })
+  const [slug, setSlug] = useState('')
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data, error: dbErr } = await supabase
+        .from('especialidades')
+        .select('*')
+        .eq('id', id)
+        .single()
+      if (dbErr || !data) {
+        console.error('[Especialidades] db.select:', dbErr)
+        setError('No se encontró la especialidad.')
+      } else {
+        setSlug(data.slug)
+        setForm({
+          nombre:           data.nombre           ?? '',
+          descripcion_corta:data.descripcion_corta ?? '',
+          descripcion:      data.descripcion       ?? '',
+          imagen_url:       data.imagen_url        ?? '',
+          icono:            data.icono             ?? '',
+          servicios:        (data.servicios as string[] ?? []).join('\n'),
+          activo:           data.activo            ?? true,
+          orden:            data.orden             ?? 0,
+        })
+      }
+      setLoading(false)
+    }
+    fetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }))
+    setError('')
+  }
+
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault()
+    setError('')
+
+    const nombre           = sanitizeText(form.nombre, 100)
+    const descripcion_corta= sanitizeText(form.descripcion_corta, 300)
+    const descripcion      = sanitizeText(form.descripcion, 2000)
+    const imagen_url       = sanitizeText(form.imagen_url, 500)
+    const icono            = sanitizeText(form.icono, 100)
+    const servicios        = form.servicios
+      .split('\n')
+      .map(s => sanitizeText(s, 100))
+      .filter(Boolean)
+
+    if (!isValidName(nombre)) return setError('El nombre contiene caracteres no válidos.')
+
+    setSaving(true)
+    const { error: dbErr } = await supabase
+      .from('especialidades')
+      .update({ nombre, descripcion_corta, descripcion, imagen_url, icono, servicios, activo: form.activo, orden: Number(form.orden) })
+      .eq('id', id)
+
+    if (dbErr) {
+      console.error('[Especialidades] db.update:', dbErr)
+      setError('No se pudo guardar. Inténtalo de nuevo.')
+      setSaving(false)
+      return
+    }
+
+    await fetch('/api/revalidate', { method: 'POST' }).catch(() => {})
+    router.push('/admin/especialidades')
+  }
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
+      <span className="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
+      Cargando…
+    </div>
+  )
+
+  return (
+    <div className="max-w-2xl">
+      <div className="flex items-center gap-3 mb-6">
+        <Link href="/admin/especialidades"
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition">
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        </Link>
+        <div>
+          <h1 className="text-xl font-bold text-white">Editar especialidad</h1>
+          {form.nombre && <p className="text-gray-400 text-sm">{form.nombre}</p>}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-4">
+
+          <div>
+            <label className={labelCls}>Nombre *</label>
+            <input name="nombre" value={form.nombre} onChange={onChange}
+              required maxLength={100} disabled={saving} className={inputCls} />
+          </div>
+
+          <div>
+            <label className={labelCls}>Slug (URL) — solo lectura</label>
+            <input value={`/especialidades/${slug}`} readOnly
+              className={`${inputCls} opacity-50 cursor-not-allowed`} />
+          </div>
+
+          <div>
+            <label className={labelCls}>Descripción corta (listado)</label>
+            <textarea name="descripcion_corta" value={form.descripcion_corta} onChange={onChange}
+              rows={2} maxLength={300} disabled={saving}
+              className={`${inputCls} resize-none`} />
+            <p className="text-gray-600 text-xs text-right mt-1">{form.descripcion_corta.length}/300</p>
+          </div>
+
+          <div>
+            <label className={labelCls}>Descripción larga</label>
+            <textarea name="descripcion" value={form.descripcion} onChange={onChange}
+              rows={4} maxLength={2000} disabled={saving}
+              className={`${inputCls} resize-none`} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>URL de imagen</label>
+              <input name="imagen_url" value={form.imagen_url} onChange={onChange}
+                maxLength={500} disabled={saving} className={inputCls}
+                placeholder="/imagenes/cardiologia.png" />
+            </div>
+            <div>
+              <label className={labelCls}>Icono (Material)</label>
+              <input name="icono" value={form.icono} onChange={onChange}
+                maxLength={100} disabled={saving} className={inputCls}
+                placeholder="monitor_heart" />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Servicios destacados (uno por línea)</label>
+            <textarea name="servicios" value={form.servicios} onChange={onChange}
+              rows={4} disabled={saving}
+              placeholder={'Hemodinamia Avanzada\nEcocardiografía 3D\nUnidad de Dolor Torácico 24/7'}
+              className={`${inputCls} resize-none font-mono text-xs`} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Orden</label>
+              <input name="orden" type="number" value={form.orden} onChange={onChange}
+                min={0} max={99} disabled={saving} className={inputCls} />
+            </div>
+            <div className="flex items-center justify-between bg-gray-800/50 rounded-xl px-4 py-3 mt-1">
+              <span className={labelCls}>Estado</span>
+              <button type="button" disabled={saving}
+                onClick={() => setForm(p => ({ ...p, activo: !p.activo }))}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition border ${
+                  form.activo
+                    ? 'bg-teal-500/10 text-teal-400 border-teal-500/20'
+                    : 'bg-gray-700/50 text-gray-400 border-gray-700'
+                }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${form.activo ? 'bg-teal-400' : 'bg-gray-500'}`} />
+                {form.activo ? 'Activa' : 'Inactiva'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+            <span className="material-symbols-outlined text-red-400 text-[18px] shrink-0">error</span>
+            <p className="text-red-400 text-sm">{error}</p>
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <button type="submit" disabled={saving}
+            className="flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-400 disabled:bg-teal-500/40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition">
+            {saving
+              ? <><span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>Guardando…</>
+              : <><span className="material-symbols-outlined text-[18px]">save</span>Guardar cambios</>
+            }
+          </button>
+          <Link href="/admin/especialidades"
+            className="flex items-center gap-2 px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white text-sm rounded-xl transition border border-gray-700">
+            Cancelar
+          </Link>
+        </div>
+      </form>
+    </div>
+  )
+}

@@ -4,10 +4,14 @@
  *  Las rutas /admin quedan excluidas — tienen su propio layout. */
 
 import { usePathname } from 'next/navigation'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
-export default function PublicShell({ children }: { children: React.ReactNode }) {
+interface PublicShellProps {
+  children: React.ReactNode
+  header: React.ReactNode
+  footer: React.ReactNode
+}
+
+export default function PublicShell({ children, header, footer }: PublicShellProps) {
   const pathname = usePathname()
   const isAdmin  = pathname.startsWith('/admin')
 
@@ -15,9 +19,9 @@ export default function PublicShell({ children }: { children: React.ReactNode })
 
   return (
     <>
-      <Header />
+      {header}
       <div className="flex-1">{children}</div>
-      <Footer />
+      {footer}
     </>
   )
 }
