@@ -33,7 +33,7 @@ export default function TipTapEditor({ content, onChange, disabled = false, plac
   // Sync external content changes (e.g. when editing loads data)
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content, false)
+      editor.commands.setContent(content, { emitUpdate: false })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content])
@@ -145,7 +145,7 @@ export default function TipTapEditor({ content, onChange, disabled = false, plac
       {/* Editor area */}
       <EditorContent
         editor={editor}
-        className="tiptap-content min-h-[320px] px-4 py-3 text-white text-sm bg-gray-800 focus-within:outline-none"
+        className="tiptap-content min-h-80 px-4 py-3 text-white text-sm bg-gray-800 focus-within:outline-none"
       />
     </div>
   )
