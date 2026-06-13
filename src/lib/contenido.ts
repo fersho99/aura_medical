@@ -143,11 +143,11 @@ export const getHitos = unstable_cache(
     try {
       const { data, error } = await db()
         .from('hitos')
-        .select('id, año, titulo, descripcion, orden, activo')
+        .select('*')
         .eq('activo', true)
         .order('orden', { ascending: true })
       if (error) { console.error('[getHitos]', error.message); return [] }
-      return (data ?? []) as Hito[]
+      return (data as unknown as Hito[]) ?? []
     } catch {
       return []
     }
