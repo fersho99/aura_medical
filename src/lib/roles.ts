@@ -18,9 +18,9 @@ export const ROL_COLORS: Record<Rol, string> = {
 // super_admin: no necesita lista — tiene acceso a todo.
 const RUTAS_POR_ROL: Record<Rol, string[]> = {
   super_admin:   [],  // vacío = sin restricciones
-  admin:         ['/admin/dashboard', '/admin/medicos', '/admin/especialidades', '/admin/unidades', '/admin/noticias', '/admin/testimonios', '/admin/citas', '/admin/aseguradoras', '/admin/cms', '/admin/hitos'],
+  admin:         ['/admin/dashboard', '/admin/medicos', '/admin/especialidades', '/admin/unidades', '/admin/noticias', '/admin/testimonios', '/admin/citas', '/admin/mensajes', '/admin/aseguradoras', '/admin/cms', '/admin/hitos'],
   editor:        ['/admin/dashboard', '/admin/noticias', '/admin/testimonios', '/admin/cms'],
-  recepcionista: ['/admin/dashboard', '/admin/citas'],
+  recepcionista: ['/admin/dashboard', '/admin/citas', '/admin/mensajes'],
 }
 
 /** Devuelve true si el rol tiene acceso a la ruta dada. */
@@ -40,6 +40,7 @@ export const MENU_ITEMS = [
   { href: '/admin/noticias',       label: 'Noticias',         icon: 'newspaper',        roles: ['super_admin','admin','editor'] },
   { href: '/admin/testimonios',    label: 'Testimonios',      icon: 'format_quote',     roles: ['super_admin','admin','editor'] },
   { href: '/admin/citas',          label: 'Citas',            icon: 'calendar_month',   roles: ['super_admin','admin','recepcionista'] },
+  { href: '/admin/mensajes',       label: 'Mensajes',         icon: 'inbox',            roles: ['super_admin','admin','recepcionista'] },
   { href: '/admin/aseguradoras',   label: 'Aseguradoras',     icon: 'health_and_safety',roles: ['super_admin','admin'] },
 
   { href: '/admin/hitos',          label: 'Hitos / Historia', icon: 'timeline',         roles: ['super_admin','admin'] },

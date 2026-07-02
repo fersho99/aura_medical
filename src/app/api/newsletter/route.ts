@@ -6,7 +6,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 export async function POST(request: NextRequest) {
   // ── Rate limit: 3 intentos por IP por hora ─────────────────────────────────
   const ip = getClientIp(request)
-  const rl = checkRateLimit(`nl_${ip}`, 3, 60 * 60 * 1000)
+  const rl = await checkRateLimit(`nl_${ip}`, 3, 60 * 60 * 1000)
 
   if (!rl.allowed) {
     return NextResponse.json(
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createServerSupabaseClient()
     const { error: dbError } = await supabase
       .from('suscriptores')
-      .upsert([{ correo: result.data!.correo }], { onConflict: 'correo', ignoreDuplicates: true })
+      .upsert([{ email: result.data!.correo }], { onConflict: 'email', ignoreDuplicates: true })
 
     if (dbError) {
       console.error('[API /newsletter] Supabase error:', dbError.message)

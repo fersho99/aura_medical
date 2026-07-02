@@ -6,7 +6,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 export async function POST(request: NextRequest) {
   // ── Rate limit: 5 citas por IP por hora ────────────────────────────────────
   const ip = getClientIp(request)
-  const rl = checkRateLimit(ip, 5, 60 * 60 * 1000)
+  const rl = await checkRateLimit(ip, 5, 60 * 60 * 1000)
 
   if (!rl.allowed) {
     return NextResponse.json(
@@ -38,13 +38,13 @@ export async function POST(request: NextRequest) {
     const supabase = await createServerSupabaseClient()
     const { error: dbError } = await supabase.from('citas').insert([
       {
-        nombre:   result.data!.nombre,
-        telefono: result.data!.telefono,
-        correo:   result.data!.correo   || null,
-        area:     result.data!.area,
-        horario:  result.data!.horario,
-        detalles: result.data!.detalles || null,
-        estado:   'pendiente',
+        nombre_paciente: result.data!.nombre,
+        telefono:        result.data!.telefono,
+        email:           result.data!.correo   || null,
+        especialidad:    result.data!.area,
+        motivo:          result.data!.detalles || null,
+        notas:           `Horario preferido: ${result.data!.horario}`,
+        estado:          'pendiente',
       },
     ])
 

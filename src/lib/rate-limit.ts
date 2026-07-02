@@ -1,55 +1,40 @@
-/**
- * rate-limit.ts — Rate limiter en memoria por IP.
- *
- * NOTA: Funciona en procesos únicos (desarrollo / VPS con un solo worker).
- * Para producción multi-instancia, reemplazar el Map por Redis/Upstash.
- */
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
 
-interface RateLimitEntry {
-  count: number
-  resetAt: number
+const redis = new Redis({
+  url:   process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+})
+
+const limiters = new Map<string, Ratelimit>()
+
+function getLimiter(limit: number, windowMs: number): Ratelimit {
+  const key = `${limit}_${windowMs}`
+  if (!limiters.has(key)) {
+    const windowSecs = Math.ceil(windowMs / 1000)
+    limiters.set(key, new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(limit, `${windowSecs} s`),
+    }))
+  }
+  return limiters.get(key)!
 }
 
-const store = new Map<string, RateLimitEntry>()
-
-/** Limpia entradas expiradas cada 5 minutos para evitar fugas de memoria. */
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, entry] of store) {
-    if (entry.resetAt < now) store.delete(key)
-  }
-}, 5 * 60 * 1000)
-
-/**
- * Verifica si la IP puede hacer una solicitud más.
- *
- * @param ip       IP del cliente (req.ip o header X-Forwarded-For)
- * @param limit    Máximo de solicitudes por ventana (default: 5)
- * @param windowMs Duración de la ventana en ms (default: 60 000 = 1 min)
- * @returns `{ allowed: true }` si pasa, `{ allowed: false, retryAfterMs }` si bloqueada
- */
-export function checkRateLimit(
+export async function checkRateLimit(
   ip: string,
   limit = 5,
   windowMs = 60_000,
-): { allowed: boolean; retryAfterMs?: number } {
-  const now   = Date.now()
-  const entry = store.get(ip)
-
-  if (!entry || entry.resetAt < now) {
-    store.set(ip, { count: 1, resetAt: now + windowMs })
+): Promise<{ allowed: boolean; retryAfterMs?: number }> {
+  try {
+    const { success, reset } = await getLimiter(limit, windowMs).limit(ip)
+    if (success) return { allowed: true }
+    return { allowed: false, retryAfterMs: reset - Date.now() }
+  } catch (err) {
+    console.error('[rate-limit] Upstash error, failing open:', err)
     return { allowed: true }
   }
-
-  if (entry.count >= limit) {
-    return { allowed: false, retryAfterMs: entry.resetAt - now }
-  }
-
-  entry.count++
-  return { allowed: true }
 }
 
-/** Extrae la IP real del cliente desde la request de Next.js. */
 export function getClientIp(request: Request): string {
   return (
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??

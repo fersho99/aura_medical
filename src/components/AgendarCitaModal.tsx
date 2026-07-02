@@ -66,6 +66,8 @@ export default function AgendarCitaModal({
   const [horario,  setHorario]  = useState('flexible')
   const [mounted,  setMounted]  = useState(false)
   const [touched,  setTouched]  = useState<Record<string, boolean>>({})
+  const [submitting,   setSubmitting]   = useState(false)
+  const [submitError,  setSubmitError]  = useState<string | null>(null)
 
   // Errores de validación calculados
   const errNombre   = validate('nombre',   nombre)
@@ -77,10 +79,36 @@ export default function AgendarCitaModal({
   function reset() {
     setStep(1); setArea(''); setDetalles('')
     setNombre(''); setTelefono(''); setCorreo(''); setHorario('flexible')
-    setTouched({})
+    setTouched({}); setSubmitting(false); setSubmitError(null)
   }
 
   function close() { setOpen(false); setTimeout(reset, 300) }
+
+  async function handleConfirmar() {
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      const res = await fetch('/api/citas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, telefono, correo, area, horario, detalles }),
+      })
+      if (res.status === 429) {
+        setSubmitError('Demasiados intentos. Por favor intenta más tarde.')
+        return
+      }
+      if (!res.ok) {
+        setSubmitError('Ocurrió un error al registrar tu cita. Intenta de nuevo.')
+        return
+      }
+      window.open(`https://wa.me/526531332053?text=${waText}`, '_blank')
+      close()
+    } catch {
+      setSubmitError('No se pudo conectar. Verifica tu conexión e intenta de nuevo.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const areaData    = areasAnatomicas.find(a => a.id === area)
   const horarioData = horariosPref.find(h => h.id === horario)
@@ -421,24 +449,37 @@ export default function AgendarCitaModal({
 
                   {/* CTAs */}
                   <div className="flex flex-col gap-sm">
-                    <a
-                      href={`https://wa.me/526531332053?text=${waText}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={close}
-                      className="flex items-center justify-center gap-sm bg-[#25D366] text-white rounded-full px-lg py-sm type-label hover:brightness-105 transition-all shadow-md shadow-[#25D366]/20"
+                    {submitError && (
+                      <div className="flex items-center gap-xs bg-error/10 border border-error/20 rounded-2xl px-md py-sm">
+                        <span className="material-symbols-outlined text-[16px] text-error shrink-0">error</span>
+                        <p className="type-label text-error font-normal normal-case tracking-normal">{submitError}</p>
+                      </div>
+                    )}
+                    <button
+                      onClick={handleConfirmar}
+                      disabled={submitting}
+                      className="flex items-center justify-center gap-sm bg-[#25D366] text-white rounded-full px-lg py-sm type-label hover:brightness-105 transition-all shadow-md shadow-[#25D366]/20 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      {/* WhatsApp icon */}
-                      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.121 1.532 5.854L.054 23.554a.75.75 0 0 0 .916.916l5.7-1.478A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.985 0-3.842-.58-5.407-1.582l-.385-.242-4 1.037 1.037-4-.242-.385A9.951 9.951 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                      </svg>
-                      Confirmar por WhatsApp
-                    </a>
+                      {submitting ? (
+                        <>
+                          <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+                          Registrando cita...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.121 1.532 5.854L.054 23.554a.75.75 0 0 0 .916.916l5.7-1.478A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.985 0-3.842-.58-5.407-1.582l-.385-.242-4 1.037 1.037-4-.242-.385A9.951 9.951 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                          </svg>
+                          Confirmar por WhatsApp
+                        </>
+                      )}
+                    </button>
 
                     <button
                       onClick={close}
-                      className="type-label text-on-surface-variant hover:text-on-surface transition-colors text-center py-xs"
+                      disabled={submitting}
+                      className="type-label text-on-surface-variant hover:text-on-surface transition-colors text-center py-xs disabled:opacity-40"
                     >
                       Cancelar
                     </button>
